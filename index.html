@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Theme primer: applies light/dark before paint (daylight default), avoids a flash -->
+  <script>(function(){try{var k='yam-theme',s=localStorage.getItem(k),h=new Date().getHours(),t=s||((h>=7&&h<19)?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <title>Yamamoto North America — Commercial &amp; Industrial Laundry Equipment</title>
+  <meta name="description" content="In stock, immediate shipping. Yamamoto commercial and industrial washer/extractors, dryers and finishing equipment — engineered for the lowest cost of ownership. Sales, distribution and support across the US, Canada and Mexico.">
+  <link rel="icon" href="/img/logo/favicon.png" sizes="any">
+  <link rel="preload" as="image" href="/img/people/hero-banner-poster.png" fetchpriority="high">
+
+  <!-- Fonts: Saira / Saira Condensed / IBM Plex Mono (not Inter/Roboto/Arial) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Saira+Condensed:wght@500;600;700;800&family=Saira:wght@300;400;500;600;700&display=swap">
+
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+  <!-- Font Awesome Kit 0a6d31be35 (SVG+JS): converts <i> tags to icons, incl. ones injected by our JS -->
+  <script src="https://kit.fontawesome.com/0a6d31be35.js" crossorigin="anonymous"></script>
+
+  <!-- GSAP (animation only; site works without it) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+  <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="header"></div>
+
+  <noscript>
+    <div style="background:#E2231A;color:#fff;padding:.6rem 1rem;font-family:monospace">
+      For the full experience enable JavaScript. To order now call
+      <a href="tel:+18662040519" style="color:#fff">866-204-0519</a>.
+    </div>
+  </noscript>
+
+  <main id="main">
+
+    <!-- ============================================ SPLIT HERO (keystone) -->
+    <section class="hero" aria-labelledby="hero-title">
+      <!-- Banner background: machine video, darkened for text legibility -->
+      <div class="hero__bg" aria-hidden="true">
+        <video class="hero__video" autoplay muted loop playsinline preload="metadata" poster="/img/people/hero-banner-poster.png">
+          <source src="/video/sample-banner-video.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">
+        </video>
+      </div>
+      <div class="hero__scrim" aria-hidden="true"></div>
+      <div class="grid-bg"></div>
+      <!-- Blueprint lines cross the seam between cinema and fast-door -->
+      <div class="blueprint" aria-hidden="true" style="z-index:1">
+        <svg viewBox="0 0 1280 760" preserveAspectRatio="none">
+          <path class="draw" style="--len:1400" d="M0 150 H1280" stroke="currentColor" stroke-width="1"/>
+          <path class="draw" style="--len:1400" d="M0 610 H1280" stroke="currentColor" stroke-width="1"/>
+          <circle class="draw" style="--len:760" cx="360" cy="430" r="120" stroke="currentColor" stroke-width="1" fill="none"/>
+          <path class="draw" style="--len:300" d="M120 430 H230" stroke="currentColor" stroke-width="1"/>
+          <path class="draw" style="--len:300" d="M120 410 V450" stroke="currentColor" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <div class="hero__grid">
+        <!-- Left ~2/3: brand cinema -->
+        <div class="hero__cinema">
+          <div class="hero__eyebrow">
+            <span class="overline">Yamamoto North America</span>
+          </div>
+          <h1 class="hero__title" id="hero-title" data-reveal>
+            Industrial laundry,<br><span class="em">engineered to endure.</span>
+          </h1>
+          <p class="lead" data-reveal>
+            Commercial &amp; industrial washer/extractors, dryers and finishing
+            equipment — precision-built in Japan, supported across North America.
+          </p>
+          <div class="hero__cta" data-reveal>
+            <a class="btn btn--primary btn--lg" href="/pages/products.html">View Our Products</a>
+          </div>
+        </div>
+
+        <!-- Right ~1/3: the fast door (urgency) -->
+        <div class="hero__door">
+          <details class="hero__door-disclosure" data-mobile-hero-door open>
+            <summary class="hero__alert">
+              <span class="hero__alert-copy">
+                <span class="hero__instock"><span class="pulse"></span> In Stock — Ships Now</span>
+                <h2 class="hero__alert-title"><span class="down">Machine down?</span><br>Find your replacement.</h2>
+                <span class="hero__alert-text">Pick a type and capacity — we'll take you straight to the right machine.</span>
+              </span>
+              <span class="hero__alert-action" aria-hidden="true">
+                <span class="hero__alert-action-label hero__alert-action-label--closed">Open form</span>
+                <span class="hero__alert-action-label hero__alert-action-label--open">Close form</span>
+                <span class="hero__alert-chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
+              </span>
+            </summary>
+
+            <div class="hero__door-body">
+              <form class="selector" data-hero-selector aria-label="Find a machine fast">
+                <div>
+                  <label for="hero-type">Machine type</label>
+                  <select id="hero-type" name="type" required></select>
+                </div>
+                <div>
+                  <label for="hero-cap">Capacity / model</label>
+                  <select id="hero-cap" name="capacity" disabled></select>
+                </div>
+                <button class="btn btn--primary btn--block btn--lg" type="submit">Find My Machine</button>
+              </form>
+
+              <a class="btn btn--ghost btn--block" href="/pages/quote.html">Request a Quote</a>
+              <p class="hero__phone">Or call <a href="tel:+18662040519">866-204-0519</a></p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ Trust band -->
+    <section class="trust-band" aria-label="Why Yamamoto">
+      <div class="trust-band__grid" data-stagger>
+        <div class="trust-item">
+          <div class="trust-item__card">
+            <span class="trust-item__icon"><i class="fa-thin fa-truck-fast" style="font-size:30px" aria-hidden="true"></i></span>
+            <div class="trust-item__title">In Stock</div>
+            <div class="trust-item__sub">Immediate shipping</div>
+            <p class="trust-item__desc">Machines ready to ship today — not weeks out. Get your facility running again fast.</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-item__card">
+            <span class="trust-item__icon"><i class="fa-thin fa-chart-line" style="font-size:30px" aria-hidden="true"></i></span>
+            <div class="trust-item__title">Lowest Cost of Ownership</div>
+            <div class="trust-item__sub">Lowest life-cycle cost</div>
+            <p class="trust-item__desc">A higher upfront price that pays back over the machine's life through lower maintenance, utilities and downtime.</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-item__card">
+            <span class="trust-item__icon"><i class="fa-thin fa-gauge-high" style="font-size:30px" aria-hidden="true"></i></span>
+            <div class="trust-item__title">Easy to Operate</div>
+            <div class="trust-item__sub">No special training</div>
+            <p class="trust-item__desc">Intuitive controls your team learns in minutes. No special training required.</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-item__card">
+            <span class="trust-item__icon"><i class="fa-thin fa-screwdriver-wrench" style="font-size:30px" aria-hidden="true"></i></span>
+            <div class="trust-item__title">Full Technical Support</div>
+            <div class="trust-item__sub">Hassle-free upkeep</div>
+            <p class="trust-item__desc">U.S.-based technical support and hassle-free upkeep — backed by people who know the machines.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ Testimonials (dark cards) -->
+    <section class="section testimonial testimonial--cards" data-testimonials>
+      <div class="container">
+        <div class="testimonial-cards__head">
+          <span class="overline">From our customers</span>
+          <h2 class="sec-head__title testimonial-cards__title">A Record of Excellence</h2>
+        </div>
+        <div class="testimonial-cards__row" data-trows aria-live="off">
+          <p class="testimonial__loading">Loading customer stories…</p>
+        </div>
+        <div class="testimonial-cards__nav" role="group" aria-label="Testimonial controls">
+          <span class="testimonial-cards__count" data-tcount aria-hidden="true">01 / 04</span>
+          <button class="testimonial-cards__arrow" type="button" data-tprev aria-label="Previous testimonial"><span aria-hidden="true">‹</span></button>
+          <button class="testimonial-cards__arrow testimonial-cards__arrow--next" type="button" data-tnext aria-label="Next testimonial"><span aria-hidden="true">›</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ Featured lineup -->
+    <section class="section lineup">
+      <div class="sec-head">
+        <div class="sec-head__row">
+          <div>
+            <span class="overline">The Lineup</span>
+            <h2 class="sec-head__title">Built for every load size</h2>
+          </div>
+          <a class="btn btn--ghost" href="/pages/products.html">View all machines <i class="fa-thin fa-arrow-right ic-fx btn__arrow" aria-hidden="true"></i></a>
+        </div>
+      </div>
+      <div class="lineup__full">
+        <div class="card-grid lineup__scroll" data-lineup data-stagger>
+          <p class="lead" style="padding:2rem">Loading machines…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ Technology / video -->
+    <section class="section tech">
+      <div class="grid-bg"></div>
+      <div class="container" style="position:relative;z-index:1">
+        <div class="tech__layout">
+          <div class="stack" data-reveal>
+            <span class="overline">Yamamoto Technology</span>
+            <h2>Precision, assembled by robots</h2>
+            <p class="lead">Japanese manufacturing with robotic, automated assembly delivers the repeatable tolerances that make a machine last — and run quiet, smooth and balanced at high G-force.</p>
+            <a class="btn btn--ghost" href="/pages/technology.html">Explore the technology <i class="fa-thin fa-arrow-right ic-fx btn__arrow" aria-hidden="true"></i></a>
+            <div class="tech__stats" data-stagger>
+              <div class="stat"><div><span class="stat__num" data-count="330">0</span><span class="stat__unit"> G</span></div><div class="stat__label">Peak extract force</div></div>
+              <div class="stat"><div><span class="stat__num" data-count="275">0</span><span class="stat__unit"> lb</span></div><div class="stat__label">Max load capacity</div></div>
+              <div class="stat"><div><span class="stat__num" data-count="3">0</span><span class="stat__unit"> gen</span></div><div class="stat__label">Family-owned</div></div>
+            </div>
+          </div>
+          <!-- Click-to-play: YouTube embed loads only on click (js/video.js) -->
+          <div class="tech__media" data-video="RWmkHakZfco" data-reveal>
+            <img class="tech__poster" src="/img/people/tech-video-poster.webp" alt="Inside the Yamamoto factory" loading="lazy" decoding="async">
+            <div class="tech__play"><button aria-label="Play the Yamamoto manufacturing video"><i class="fa-thin fa-play" style="font-size:26px" aria-hidden="true"></i></button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ Industries (icon console) -->
+    <section class="section industries-console" data-no-frame aria-labelledby="ind-title">
+      <div class="container">
+        <div class="ind-console__head">
+          <div>
+            <span class="overline">Industries Served</span>
+            <h2 class="ind-console__title" id="ind-title">Wherever laundry can't stop.</h2>
+          </div>
+          <a class="btn btn--ghost" href="/pages/industries.html">All industries <i class="fa-thin fa-arrow-right ic-fx btn__arrow" aria-hidden="true"></i></a>
+        </div>
+
+        <div class="ind-console" data-industries-console>
+          <p class="ind-console__loading">Loading industries…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ CTA banner -->
+    <section class="cta-banner section--tight">
+      <div class="grid-bg"></div>
+      <div class="container cta-banner__inner">
+        <div>
+          <span class="overline">Ready when you are</span>
+          <h2>Get the right machine, fast.</h2>
+        </div>
+        <div class="cta-banner__actions">
+          <a class="btn btn--primary btn--lg" href="/pages/quote.html">Request a Quote</a>
+          <a class="btn btn--ghost btn--lg btn--call" href="tel:+18662040519">Call 866-204-0519</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-shell="footer"></div>
+</body>
+</html>

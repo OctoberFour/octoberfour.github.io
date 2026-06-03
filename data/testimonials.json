@@ -1,0 +1,30 @@
+[
+  {
+    "quote": "The controls were easy for our team to learn, and the machine keeps up with our busiest laundry days.",
+    "author": "Operations Manager",
+    "role": "Hotel laundry",
+    "industry": "hospitality",
+    "image": ""
+  },
+  {
+    "quote": "We needed equipment that could run consistently without adding more complexity for our staff.",
+    "author": "Facilities Director",
+    "role": "Regional hospital",
+    "industry": "healthcare",
+    "image": ""
+  },
+  {
+    "quote": "The build quality feels different. It is the kind of machine we expect to keep working hard for years.",
+    "author": "Plant Supervisor",
+    "role": "Industrial laundry",
+    "industry": "industrial",
+    "image": ""
+  },
+  {
+    "quote": "When a machine is down, speed matters. Yamamoto helped us get the right replacement without slowing production.",
+    "author": "General Manager",
+    "role": "Commercial laundry",
+    "industry": "service",
+    "image": ""
+  }
+]

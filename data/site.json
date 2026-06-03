@@ -1,0 +1,28 @@
+{
+  "name": "Yamamoto North America",
+  "phone": "866-204-0519",
+  "phone_href": "tel:+18662040519",
+  "email": "info@yamamoto-na.com",
+  "address": {
+    "line1": "205 S. Lee St.",
+    "po_box": "P.O. Box 3264",
+    "city": "Bloomington",
+    "state": "IL",
+    "zip": "61701"
+  },
+  "service_area": "US, Canada & Mexico",
+  "warranty_claim": "{{WARRANTY_CLAIM}}",
+  "warranty_note": "NEEDS CONFIRMATION — brief says 3-year all-inclusive; live site says 5-year parts.",
+  "social": [
+    { "label": "Facebook", "url": "#", "icon": "facebook" },
+    { "label": "YouTube", "url": "#", "icon": "youtube" },
+    { "label": "Google", "url": "#", "icon": "google" },
+    { "label": "X", "url": "#", "icon": "x" }
+  ],
+  "promises": [
+    { "title": "In Stock", "sub": "Immediate shipping available", "icon": "truck" },
+    { "title": "Lowest Cost of Ownership", "sub": "Lowest life-cycle cost", "icon": "chart" },
+    { "title": "Easy to Operate", "sub": "No special training necessary", "icon": "dial" },
+    { "title": "Full Technical Support", "sub": "Hassle-free upkeep", "icon": "wrench" }
+  ]
+}

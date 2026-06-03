@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order Now — Yamamoto North America</title>
+  <meta name="description" content="Place a purchase order for Yamamoto laundry equipment. Structured order form with an agreement step. In stock, immediate shipping available.">
+  <link rel="icon" href="/img/logo/favicon.png" sizes="any">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Saira+Condensed:wght@500;600;700;800&family=Saira:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages.css">
+  <!-- Font Awesome Kit 0a6d31be35 (SVG+JS): converts <i> tags to icons, incl. ones injected by our JS -->
+  <script src="https://kit.fontawesome.com/0a6d31be35.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+  <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div data-shell="header"></div>
+  <noscript><div style="background:#E2231A;color:#fff;padding:.6rem 1rem;font-family:monospace">To place an order, call <a href="tel:+18662040519" style="color:#fff">866-204-0519</a>.</div></noscript>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="grid-bg"></div>
+      <div class="container page-hero__inner">
+        <div class="breadcrumb"><a href="/">Home</a><span class="sep">/</span><span>Order Now</span></div>
+        <span class="overline">Purchase Intent</span>
+        <h1 style="margin:.5rem 0">Order Now</h1>
+        <p class="lead">Ready to buy. Complete the order details and agreement — a specialist confirms availability and finalizes your order.</p>
+      </div>
+    </section>
+
+    <section class="section--tight">
+      <div class="container">
+        <div class="pd-layout">
+        <form data-form="order" data-signature="true" novalidate>
+          <h2 style="font-size:var(--fs-md);margin-bottom:1rem">Your details</h2>
+          <div class="field-row">
+            <div class="field"><label for="o-name">Full name <span class="req">*</span></label><input id="o-name" name="name" type="text" required autocomplete="name"><span class="error"></span></div>
+            <div class="field"><label for="o-company">Company / facility <span class="req">*</span></label><input id="o-company" name="company" type="text" required autocomplete="organization"><span class="error"></span></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="o-email">Email <span class="req">*</span></label><input id="o-email" name="email" type="email" required autocomplete="email"><span class="error"></span></div>
+            <div class="field"><label for="o-phone">Phone <span class="req">*</span></label><input id="o-phone" name="phone" type="tel" required autocomplete="tel"><span class="error"></span></div>
+          </div>
+
+          <h2 style="font-size:var(--fs-md);margin:1.5rem 0 1rem">Order</h2>
+          <div class="field-row">
+            <div class="field"><label for="o-model">Machine <span class="req">*</span></label><select id="o-model" name="model" data-options="models" required></select><span class="error"></span></div>
+            <div class="field"><label for="o-qty">Quantity <span class="req">*</span></label><input id="o-qty" name="quantity" type="number" min="1" value="1" required><span class="error"></span></div>
+          </div>
+          <div class="field">
+            <label for="o-ship">Shipping address <span class="req">*</span></label>
+            <textarea id="o-ship" name="shipping_address" required autocomplete="street-address"></textarea><span class="error"></span>
+          </div>
+          <div class="field">
+            <label for="o-notes">Order notes</label>
+            <textarea id="o-notes" name="notes" placeholder="Delivery windows, install needs, PO number, etc."></textarea>
+          </div>
+
+          <div class="hp" aria-hidden="true"><label>Company URL<input type="text" name="company_url" tabindex="-1" autocomplete="off"></label></div>
+
+          <button class="btn btn--primary btn--lg" type="submit">Review &amp; Sign Agreement</button>
+          <p class="hint" style="margin-top:1rem">A signed agreement step follows. Final pricing, availability and terms are confirmed by a Yamamoto specialist before any order is binding.</p>
+        </form>
+
+        <aside class="stack">
+          <div class="spec-block">
+            <div class="spec-block__head">In Stock</div>
+            <div style="padding:var(--space-3);font-family:var(--font-mono);font-size:var(--fs-sm);color:var(--color-fog-2);line-height:1.7">Most models ship now. A specialist confirms current lead times for your machine.</div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block__head">Order by phone</div>
+            <div style="padding:var(--space-3);font-family:var(--font-mono);font-size:var(--fs-sm);color:var(--color-fog-2);line-height:1.8">
+              Prefer to talk it through?<br>
+              <a href="tel:+18662040519" style="color:#fff">866-204-0519</a><br>
+              <a href="mailto:info@yamamoto-na.com" style="color:#fff">info@yamamoto-na.com</a>
+            </div>
+          </div>
+          <div class="spec-block">
+            <div class="spec-block__head">What happens next</div>
+            <div style="padding:var(--space-3);font-family:var(--font-mono);font-size:var(--fs-sm);color:var(--color-fog-2);line-height:1.7">
+              1 — Submit your details and sign the agreement.<br>
+              2 — A specialist confirms availability, pricing and terms.<br>
+              3 — We finalize and schedule shipping.
+            </div>
+          </div>
+        </aside>
+        </div>
+
+        <div class="form-success" data-form-success="order">
+          <div class="form-success__icon"><i class="fa-thin fa-circle-check ic-fx" style="font-size:40px" aria-hidden="true"></i></div>
+          <h2 style="font-size:var(--fs-xl)">Order submitted</h2>
+          <p class="lead">Thank you. A specialist will confirm availability, final pricing and terms before your order is processed. Questions? Call <a href="tel:+18662040519" style="color:#fff;text-decoration:underline">866-204-0519</a>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- E-signature / agreement lightbox (UI + validation only this phase) -->
+  <div class="modal" id="sign-modal" role="dialog" aria-modal="true" aria-labelledby="sign-title">
+    <div class="modal__scrim"></div>
+    <div class="modal__panel">
+      <button class="modal__close" data-sign-close aria-label="Close">&times;</button>
+      <span class="overline">Agreement</span>
+      <h2 id="sign-title" style="font-size:var(--fs-lg);margin:.5rem 0 1rem">Confirm your order</h2>
+      <p style="color:var(--color-fog-2);font-size:var(--fs-sm)">
+        By signing, you confirm the order details above and authorize Yamamoto North America to
+        contact you to finalize pricing, availability and terms. This is not a binding charge.
+      </p>
+      <div class="field" data-sign-error style="margin-top:1.5rem">
+        <label for="sign-name">Type your full name to sign <span class="req">*</span></label>
+        <input id="sign-name" name="signature_name" type="text" autocomplete="name">
+        <span class="error">Enter your name and check the box to continue.</span>
+      </div>
+      <div class="field" style="flex-direction:row;align-items:flex-start;gap:.6rem">
+        <input id="sign-agree" name="signature_agree" type="checkbox" style="width:auto;margin-top:.3rem">
+        <label for="sign-agree" style="font-family:var(--font-body);text-transform:none">I have reviewed my order and agree to be contacted to finalize it.</label>
+      </div>
+      <div class="pd-actions" style="margin-top:1rem">
+        <button class="btn btn--primary" data-sign-agree type="button">Sign &amp; Submit Order</button>
+        <button class="btn btn--ghost" data-sign-close type="button">Cancel</button>
+      </div>
+      <p class="portal-note" style="margin-top:1.25rem">Legally-binding e-signature capture, device metadata and order emails are a later backend phase.</p>
+    </div>
+  </div>
+
+  <div data-shell="footer"></div>
+</body>
+</html>
