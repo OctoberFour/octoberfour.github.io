@@ -27,6 +27,8 @@
     rgba(13,13,15,0.95) 0%, rgba(13,13,15,0.8) 24%,
     rgba(13,13,15,0.42) 48%, rgba(13,13,15,0.16) 70%, rgba(13,13,15,0.3) 100%);
 }
+/* Blueprint linework + circle removed; keep only the fine grid, dialed back so it's barely there */
+.hero .grid-bg { opacity: 0.22; }
 .hero__grid {
   position: relative; z-index: 1;
   max-width: var(--container); margin-inline: auto;
@@ -120,6 +122,9 @@
 .selector select option { background: var(--color-surface); color: var(--text-on-dark); font-family: var(--font-mono); }
 .selector select option:disabled { color: var(--color-fog); }
 .hero__door .btn--block { margin-top: var(--space-2); }
+/* Request a Quote (secondary CTA): lift its hairline border so it reads on the dark form */
+.hero__door .btn--ghost { border-color: var(--color-fog); }
+.hero__door .btn--ghost:hover { border-color: var(--color-fog-2); }
 .hero__phone { text-align: center; font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--color-fog); margin-top: var(--space-1); }
 .hero__phone a { color: var(--text-on-dark); }
 
@@ -498,6 +503,69 @@
 @media (max-width: 400px) { .ind-console { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) {
   .ind-tile__photo, .ind-tile__desc { transition: none; }
+}
+
+/* ===================================================== Featured machine spotlight */
+/* A dark split spotlight: oversized model name + key stats on the left, the
+   machine on a faint red glow at right. Stays dark in both themes (see tokens). */
+.featured { background: var(--color-ink); border-top: 1px solid var(--color-line-dark); }
+.featured__inner {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: grid;
+  grid-template-columns: 1.12fr 0.88fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5.5rem);
+}
+.featured__loading { font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--color-fog); }
+.featured__copy { display: flex; flex-direction: column; gap: var(--space-4); max-width: 640px; }
+.featured__eyebrow { display: flex; align-items: center; gap: var(--space-3); }
+.featured__rule { width: 48px; height: 1px; background: var(--color-line-dark); }
+.featured__tag {
+  font-family: var(--font-mono); font-size: var(--fs-xs);
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-fog);
+}
+.featured__title {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(3.5rem, 8vw, 8.5rem); line-height: 0.88; letter-spacing: -0.01em;
+  text-transform: uppercase; color: var(--text-on-dark);
+}
+.featured__sub {
+  font-family: var(--font-display); font-weight: 500; font-size: var(--fs-lg);
+  letter-spacing: 0.02em; text-transform: uppercase; color: var(--color-fog-2);
+}
+.featured__lede {
+  font-family: var(--font-body); font-size: 1.125rem; line-height: 1.6;
+  color: var(--color-fog); max-width: 46ch;
+}
+.featured__stats { display: flex; align-items: flex-end; gap: clamp(1.5rem, 3vw, 2.75rem); padding-block: var(--space-2); }
+.featured__stat { display: flex; flex-direction: column; gap: 6px; }
+.featured__stat-val {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(2.25rem, 3.5vw, 3.25rem); line-height: 0.9; color: var(--text-on-dark);
+}
+.featured__stat-unit { font-family: var(--font-mono); font-weight: 400; font-size: var(--fs-sm); color: var(--color-fog); }
+.featured__stat-label {
+  font-family: var(--font-mono); font-size: var(--fs-xs);
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-fog);
+}
+.featured__stat-div { width: 1px; height: 52px; background: var(--color-line-dark); }
+.featured__cta { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; padding-top: var(--space-2); }
+.featured__media {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  min-width: 0; min-height: 360px;
+}
+.featured__media::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(56% 54% at 56% 50%, rgba(226,35,26,0.10) 0%, rgba(13,13,15,0) 70%);
+}
+.featured__img { position: relative; max-width: 100%; max-height: 580px; width: auto; height: auto; object-fit: contain; }
+
+@media (max-width: 900px) {
+  .featured__inner { grid-template-columns: 1fr; gap: var(--space-5); }
+  .featured__media { order: -1; min-height: 0; }
+  .featured__img { max-height: 420px; }
 }
 
 /* ========================================================== Testimonials (dark cards) */

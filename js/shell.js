@@ -72,10 +72,13 @@ function buildHeader(site, catalog) {
   }).join("");
 
   const megaCards = cats.map(c => `
-    <a class="mega__card" href="/pages/products.html?cat=${c.slug}">
-      <div class="mega__thumb">${icon("dial", 30)}</div>
-      <div class="mega__name">${escapeHtml(c.name)}</div>
-      <div class="mega__count">${counts[c.slug] ? counts[c.slug] + " models" : "View range"}</div>
+    <a class="mega__card${c.nav_cover ? " mega__card--cover" : ""}" href="/pages/products.html?cat=${c.slug}">
+      ${c.nav_image ? `<img class="mega__img" src="${escapeHtml(c.nav_image)}" alt="" loading="lazy" decoding="async">` : ""}
+      <span class="mega__scrim" aria-hidden="true"></span>
+      <span class="mega__meta">
+        <span class="mega__name">${escapeHtml(c.name)}</span>
+        <span class="mega__count">${counts[c.slug] ? counts[c.slug] + " models" : "View range"}</span>
+      </span>
     </a>`).join("");
 
   const drawerItems = NAV.filter(i => !i.cta).map(item => {

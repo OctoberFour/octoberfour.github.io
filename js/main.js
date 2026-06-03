@@ -7,7 +7,7 @@ import { initTheme } from "./theme.js";
 import { initAlert } from "./alert.js";
 import { initMotion } from "./motion.js";
 import {
-  initLineup, initIndustriesGrid, initIndustriesConsole, initTestimonials, initHeroSelector,
+  initLineup, initFeatured, initIndustriesGrid, initIndustriesConsole, initTestimonials, initHeroSelector,
   initCategoryPage, initProductDetail, populateFormOptions,
   initIndustryPage, initDealerLocator
 } from "./catalog.js";
@@ -26,6 +26,7 @@ async function boot() {
   await Promise.all([
     initHeroSelector(),
     initLineup(),
+    initFeatured(),
     initIndustriesGrid(),
     initIndustriesConsole(),
     initTestimonials(),

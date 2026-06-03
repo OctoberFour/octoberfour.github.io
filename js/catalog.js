@@ -122,6 +122,53 @@ export async function initLineup() {
   mount.innerHTML = list.map(p => productCard(data, p, { features: true })).join("");
 }
 
+/* --------------------------------------------------- Homepage: featured machine */
+export async function initFeatured() {
+  const mount = document.querySelector("[data-featured]");
+  if (!mount) return;
+  const data = await catalog();
+  if (!data) return;
+  const p = data.products.find(x => x.slug === mount.dataset.featured);
+  if (!p) return;
+  const cat = (data.categories || []).find(c => c.slug === p.category);
+
+  // Lead with the most compelling specs (capacity, extract force) before weight.
+  const STAT_ORDER = ["load_capacity_lbs", "wash_dry_lbs", "g_force", "drying_heat", "machine_weight_lbs"];
+  const rank = (k) => (STAT_ORDER.indexOf(k) + 1) || 99;
+  const specs = Object.entries(p.specs || {})
+    .filter(([, v]) => v != null)
+    .sort((a, b) => rank(a[0]) - rank(b[0]))
+    .slice(0, 3)
+    .map(([k, v]) => {
+      const [label, unit] = CARD_SPEC_LABELS[k] || SPEC_LABELS[k] || [k, ""];
+      const val = typeof v === "number" ? v.toLocaleString() : escapeHtml(String(v));
+      return `<div class="featured__stat">
+        <span class="featured__stat-val">${val}${unit ? `<span class="featured__stat-unit"> ${escapeHtml(unit)}</span>` : ""}</span>
+        <span class="featured__stat-label">${escapeHtml(label)}</span>
+      </div>`;
+    }).join('<span class="featured__stat-div" aria-hidden="true"></span>');
+
+  mount.innerHTML = `
+    <div class="featured__copy">
+      <div class="featured__eyebrow">
+        <span class="overline">Featured machine</span>
+        <span class="featured__rule" aria-hidden="true"></span>
+        <span class="featured__tag">No. 01</span>
+      </div>
+      <h2 class="featured__title" id="featured-title">${escapeHtml(p.model)}</h2>
+      <p class="featured__sub">${escapeHtml(cat?.name || "")}</p>
+      <p class="featured__lede">Our heaviest-duty soft-mount machine — built to run hard, all day, with extraction that pulls more water out and cuts drying time and energy cost.</p>
+      <div class="featured__stats">${specs}</div>
+      <div class="featured__cta">
+        <a class="btn btn--primary btn--lg" href="/products/detail.html?p=${p.slug}">View the ${escapeHtml(p.model)} ${icon("arrow", 16)}</a>
+        <a class="btn btn--ghost btn--lg" href="/pages/quote.html">Request a quote</a>
+      </div>
+    </div>
+    <div class="featured__media">
+      <img class="featured__img" src="${escapeHtml(p.cutout || "")}" alt="${escapeHtml(p.model)}" loading="lazy" decoding="async">
+    </div>`;
+}
+
 /* --------------------------------------------------------- Homepage: industries */
 export async function initIndustriesGrid() {
   const mount = document.querySelector("[data-industries]");

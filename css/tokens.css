@@ -100,7 +100,7 @@
 [data-theme="light"] {
   --color-ink:       #E9EAEB;   /* page base → industrial light grey */
   --color-surface:   #FFFFFF;   /* raised panels / cards → white */
-  --color-surface-2: #E9E8E3;
+  --color-surface-2: #DCDDDF;   /* button/option hover fill: the page grey, a touch darker */
   --color-fog:       #6A6A70;   /* muted labels → darker */
   --color-fog-2:     #34343A;   /* secondary text → near-black */
   --color-line-dark: #CFCEC7;   /* hairlines → light grey (a touch darker for definition) */
@@ -151,10 +151,11 @@
   color: var(--text-on-dark);
 }
 
-/* The product lineup keeps the dark scheme in light mode — a dark band with ink
-   cards and hairline grid, matching the dark version. The section is otherwise
-   transparent, so it needs an explicit dark background here. */
-[data-theme="light"] .lineup {
+/* The product lineup and the featured-machine spotlight keep the dark scheme in
+   light mode — a dark band matching the dark version. Both are otherwise
+   transparent / ink, so they get an explicit dark background here. */
+[data-theme="light"] .lineup,
+[data-theme="light"] .featured {
   --color-ink:       #0D0D0F;
   --color-surface:   #151518;
   --color-surface-2: #1E1E22;
