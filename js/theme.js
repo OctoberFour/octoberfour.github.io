@@ -7,7 +7,7 @@ const root = document.documentElement;
 
 const timeDefault = () => {
   const h = new Date().getHours();
-  return (h >= 7 && h < 19) ? "light" : "dark";   // daylight 7am–7pm → light
+  return (h >= 6 && h < 20) ? "light" : "dark";   // daylight 6am–8pm → light
 };
 
 const savedTheme = () => {
