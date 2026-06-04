@@ -377,6 +377,10 @@
 .tech__play button:hover { background: var(--color-red-deep); }
 .tech__layout { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: center; }
 .tech__stats { display: grid; grid-template-columns: repeat(3, auto); gap: var(--space-6); margin-top: var(--space-5); }
+/* Match the featured-product stat style: heavier Saira number + small grey mono unit. */
+.tech__stats .stat__num { font-weight: 700; font-size: clamp(2.25rem, 3.5vw, 3.25rem); line-height: 0.9; }
+.tech__stats .stat__unit { font-family: var(--font-mono); font-weight: 400; font-size: var(--fs-sm); color: var(--color-fog); }
+.tech__stats .stat__label { letter-spacing: 0.12em; }
 @media (max-width: 860px) { .tech__layout { grid-template-columns: 1fr; } .tech__stats { grid-template-columns: 1fr 1fr; gap: var(--space-4); } }
 
 /* ========================================================== Industries */
@@ -528,7 +532,7 @@
 }
 .featured__title {
   font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(3.5rem, 8vw, 8.5rem); line-height: 0.88; letter-spacing: -0.01em;
+  font-size: clamp(3rem, 6.4vw, 7rem); line-height: 0.9; letter-spacing: -0.01em;
   text-transform: uppercase; color: var(--text-on-dark);
 }
 .featured__sub {
@@ -574,6 +578,7 @@
   background: var(--color-ink);
   color: var(--text-on-dark);
   padding-block: clamp(2.5rem, 5vw, 4.5rem);
+  --tcard-w: clamp(300px, 30vw, 440px);   /* card width — ~3 sit in the window on desktop */
 }
 .testimonial-cards__head {
   text-align: center;
@@ -616,19 +621,29 @@
   .testimonial-cards__arrow:hover { border-color: var(--color-red); color: var(--text-on-dark); }
 }
 .testimonial-cards__arrow--next { border-color: var(--color-red); color: var(--text-on-dark); }
+/* At the first/last quote the matching arrow has nowhere to go. */
+.testimonial-cards__arrow.is-disabled { opacity: 0.32; pointer-events: none; }
 
+/* The window is a horizontal scroller holding every quote at once. Arrows scroll
+   the chosen card to centre (scroll-snap settles it); the eased scroll is the
+   physical slide. The edge mask fades cards only as they pass the window bounds —
+   they never cross-fade in place. Native horizontal swipe comes for free. */
 .testimonial-cards__row {
   display: flex;
   gap: var(--space-4);
   align-items: stretch;
-  touch-action: pan-y;          /* horizontal drags become swipes; vertical still scrolls */
-  transition: opacity var(--dur-mid) var(--ease-out),
-              transform var(--dur-mid) var(--ease-out);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-inline: calc(50% - var(--tcard-w) / 2);   /* so the first/last card can reach centre */
+  scrollbar-width: none;                              /* Firefox */
 }
-/* While a finger is dragging, the card tracks 1:1 (no easing); on release the
-   transform transition above eases it back to centre. */
-.testimonial-cards__row.is-dragging { transition: none; }
-.testimonial-cards__row.is-fading { opacity: 0; }
+.testimonial-cards__row {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+}
+.testimonial-cards__row::-webkit-scrollbar { display: none; }   /* Chrome/Safari */
 .testimonial__loading {
   font-family: var(--font-mono);
   font-size: var(--fs-sm);
@@ -638,7 +653,8 @@
 
 /* The dark testimonial card */
 .tcard {
-  flex: 1;
+  flex: 0 0 var(--tcard-w);
+  scroll-snap-align: center;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -680,10 +696,10 @@
 .tcard__role { color: var(--color-fog); }
 
 @media (max-width: 900px) {
-  .testimonial-cards__row .tcard:not(.is-active) { display: none; }
+  .testimonial--cards { --tcard-w: min(82vw, 440px); }   /* one card centred, neighbours peek */
 }
 @media (prefers-reduced-motion: reduce) {
-  .testimonial-cards__row { transition: none; }
+  .testimonial-cards__row { scroll-behavior: auto; }
 }
 
 /* ========================================================== CTA banner */

@@ -132,7 +132,14 @@ export async function initFeatured() {
   if (!p) return;
   const cat = (data.categories || []).find(c => c.slug === p.category);
 
-  // Lead with the most compelling specs (capacity, extract force) before weight.
+  // Full spec labels for this hero (capacity → extract force → weight).
+  const FEAT_LABELS = {
+    load_capacity_lbs: ["Load Capacity", "lb"],
+    wash_dry_lbs: ["Wash / Dry", "lb"],
+    g_force: ["Extract Force", "G"],
+    drying_heat: ["Heating", ""],
+    machine_weight_lbs: ["Machine Weight", "lb"]
+  };
   const STAT_ORDER = ["load_capacity_lbs", "wash_dry_lbs", "g_force", "drying_heat", "machine_weight_lbs"];
   const rank = (k) => (STAT_ORDER.indexOf(k) + 1) || 99;
   const specs = Object.entries(p.specs || {})
@@ -140,23 +147,27 @@ export async function initFeatured() {
     .sort((a, b) => rank(a[0]) - rank(b[0]))
     .slice(0, 3)
     .map(([k, v]) => {
-      const [label, unit] = CARD_SPEC_LABELS[k] || SPEC_LABELS[k] || [k, ""];
-      const val = typeof v === "number" ? v.toLocaleString() : escapeHtml(String(v));
+      const [label, unit] = FEAT_LABELS[k] || SPEC_LABELS[k] || [k, ""];
+      // Numeric stats count up on scroll-in (motion.js [data-count]); strings render as-is.
+      const valHtml = typeof v === "number" ? `<span data-count="${v}">0</span>` : escapeHtml(String(v));
       return `<div class="featured__stat">
-        <span class="featured__stat-val">${val}${unit ? `<span class="featured__stat-unit"> ${escapeHtml(unit)}</span>` : ""}</span>
+        <span class="featured__stat-val">${valHtml}${unit ? `<span class="featured__stat-unit"> ${escapeHtml(unit)}</span>` : ""}</span>
         <span class="featured__stat-label">${escapeHtml(label)}</span>
       </div>`;
     }).join('<span class="featured__stat-div" aria-hidden="true"></span>');
 
+  // Short eyebrow tag from the category (e.g. "Industrial Washer/Extractors" → "Industrial").
+  const tag = (cat?.name || "Featured").split(/[\s/]+/)[0];
+
   mount.innerHTML = `
-    <div class="featured__copy">
+    <div class="featured__copy" data-stagger>
       <div class="featured__eyebrow">
         <span class="overline">Featured machine</span>
         <span class="featured__rule" aria-hidden="true"></span>
-        <span class="featured__tag">No. 01</span>
+        <span class="featured__tag">${escapeHtml(tag)}</span>
       </div>
-      <h2 class="featured__title" id="featured-title">${escapeHtml(p.model)}</h2>
-      <p class="featured__sub">${escapeHtml(cat?.name || "")}</p>
+      <h2 class="featured__title" id="featured-title">Built to<br>run hard.</h2>
+      <p class="featured__sub">The ${escapeHtml(p.model)} — ${escapeHtml(cat?.name || "")}</p>
       <p class="featured__lede">Our heaviest-duty soft-mount machine — built to run hard, all day, with extraction that pulls more water out and cuts drying time and energy cost.</p>
       <div class="featured__stats">${specs}</div>
       <div class="featured__cta">
@@ -164,7 +175,7 @@ export async function initFeatured() {
         <a class="btn btn--ghost btn--lg" href="/pages/quote.html">Request a quote</a>
       </div>
     </div>
-    <div class="featured__media">
+    <div class="featured__media" data-reveal>
       <img class="featured__img" src="${escapeHtml(p.cutout || "")}" alt="${escapeHtml(p.model)}" loading="lazy" decoding="async">
     </div>`;
 }
@@ -237,19 +248,20 @@ export async function initTestimonials() {
   const items = await getJSON("/data/testimonials.json") || FALLBACK_TESTIMONIALS;
   if (!items || !items.length) return;
 
-  const row = mount.querySelector("[data-trows]");
-  const countEl = mount.querySelector("[data-tcount]");
+  const row = mount.querySelector("[data-trows]");      // the horizontal scroller
   const prevBtn = mount.querySelector("[data-tprev]");
   const nextBtn = mount.querySelector("[data-tnext]");
   if (!row) return;
 
   const n = items.length;
-  let i = 0;
-  let timer = null;
-  let isPaused = false;
+  const reduce = prefersReducedMotion();
+  let i = 0, timer = null, isPaused = false, dir = 1;
 
-  const card = (t, active) => `
-    <article class="tcard${active ? " is-active" : ""}" aria-roledescription="testimonial"${active ? "" : ' aria-hidden="true"'}>
+  // Every quote lives in the scroller at once. Navigation physically scrolls the
+  // chosen card to centre — the cards never re-render or cross-fade in place; they
+  // only fade where they pass under the masked left/right edges of the window.
+  row.innerHTML = items.map((t, idx) => `
+    <article class="tcard${idx === 0 ? " is-active" : ""}" aria-roledescription="testimonial">
       <span class="tcard__mark" aria-hidden="true">&ldquo;</span>
       <p class="tcard__quote">${escapeHtml(t.quote)}</p>
       <p class="tcard__attr">
@@ -257,93 +269,75 @@ export async function initTestimonials() {
         <span class="tcard__sep" aria-hidden="true">//</span>
         <span class="tcard__role">${escapeHtml(t.role)}</span>
       </p>
-    </article>`;
+    </article>`).join("");
+  const cards = Array.from(row.querySelectorAll(".tcard"));
 
-  // A three-card window centred on the active testimonial (CSS shows only the
-  // active card on mobile). The active card is always the middle one.
-  const windowIdxs = () =>
-    n <= 2 ? items.map((_, idx) => idx) : [(i - 1 + n) % n, i, (i + 1) % n];
-  const paint = () => {
-    row.innerHTML = windowIdxs().map((idx) => card(items[idx], idx === i)).join("");
-    if (countEl) countEl.textContent =
-      `${String(i + 1).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;
+  const clamp = (x) => Math.max(0, Math.min(n - 1, x));
+  const setActive = (idx) => {
+    i = idx;
+    cards.forEach((c, k) => c.classList.toggle("is-active", k === idx));
+    prevBtn?.classList.toggle("is-disabled", idx <= 0);
+    nextBtn?.classList.toggle("is-disabled", idx >= n - 1);
+    prevBtn?.setAttribute("aria-disabled", String(idx <= 0));
+    nextBtn?.setAttribute("aria-disabled", String(idx >= n - 1));
   };
 
-  const show = (next) => {
-    const ni = (next + n) % n;
-    if (ni === i) return;
-    if (prefersReducedMotion()) { i = ni; paint(); return; }
-    row.classList.add("is-fading");
-    window.setTimeout(() => {
-      i = ni;
-      paint();
-      row.classList.remove("is-fading");
-    }, 200);
+  // Scroll so card `target` sits in the centre of the window. scroll-snap settles
+  // it; the eased scroll IS the physical movement the user sees.
+  const centre = (target, smooth) => {
+    const card = cards[clamp(target)];
+    const offset = card.getBoundingClientRect().left - row.getBoundingClientRect().left;
+    const left = row.scrollLeft + offset - (row.clientWidth - card.clientWidth) / 2;
+    row.scrollTo({ left, behavior: smooth && !reduce ? "smooth" : "auto" });
   };
+  const go = (target) => { const t = clamp(target); centre(t, true); setActive(t); };
+
+  // After a native swipe (or any scroll) settles, mark whichever card is nearest
+  // the window centre as the active one.
+  const nearest = () => {
+    const mid = row.getBoundingClientRect().left + row.clientWidth / 2;
+    let best = 0, bestD = Infinity;
+    cards.forEach((c, k) => {
+      const r = c.getBoundingClientRect();
+      const d = Math.abs(r.left + r.width / 2 - mid);
+      if (d < bestD) { bestD = d; best = k; }
+    });
+    return best;
+  };
+  let settleTimer = null;
+  row.addEventListener("scroll", () => {
+    window.clearTimeout(settleTimer);
+    settleTimer = window.setTimeout(() => { const idx = nearest(); if (idx !== i) setActive(idx); }, 90);
+  }, { passive: true });
 
   const stop = () => { if (timer) { window.clearInterval(timer); timer = null; } };
   const start = () => {
-    if (timer || isPaused || prefersReducedMotion() || n < 2) return;
-    timer = window.setInterval(() => show(i + 1), TESTIMONIAL_INTERVAL_MS);
+    if (timer || isPaused || reduce || n < 2) return;
+    timer = window.setInterval(() => {
+      if (i >= n - 1) dir = -1; else if (i <= 0) dir = 1;
+      go(i + dir);
+    }, TESTIMONIAL_INTERVAL_MS);
   };
   const pause = () => { isPaused = true; stop(); };
   const resume = () => { isPaused = false; start(); };
 
-  if (prevBtn) prevBtn.addEventListener("click", () => show(i - 1));
-  if (nextBtn) nextBtn.addEventListener("click", () => show(i + 1));
-
-  // Touch/pen swipe — the card follows your finger; release past a threshold to
-  // change quote, otherwise it springs back to centre. Mouse users keep the
-  // arrows, so the desktop is unaffected.
-  let dragId = null, x0 = 0, y0 = 0, dragging = false;
-  const resist = (dx) => {                  // 1:1 up to 100px, then rubber-band
-    const max = 100;
-    return Math.abs(dx) <= max ? dx : Math.sign(dx) * (max + (Math.abs(dx) - max) * 0.2);
-  };
-  const settle = () => { row.classList.remove("is-dragging"); row.style.transform = ""; };
-
-  row.addEventListener("pointerdown", (e) => {
-    if (e.pointerType === "mouse") return;
-    dragId = e.pointerId; x0 = e.clientX; y0 = e.clientY; dragging = false;
-  });
-  row.addEventListener("pointermove", (e) => {
-    if (e.pointerId !== dragId) return;
-    const dx = e.clientX - x0, dy = e.clientY - y0;
-    if (!dragging) {
-      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;            // wait for intent
-      if (Math.abs(dy) >= Math.abs(dx)) { dragId = null; return; } // vertical → let the page scroll
-      dragging = true;
-      try { row.setPointerCapture(e.pointerId); } catch { /* ignore */ }
-      pause();
-      row.classList.add("is-dragging");
-    }
-    row.style.transform = `translateX(${resist(dx)}px)`;
-  });
-  row.addEventListener("pointerup", (e) => {
-    if (e.pointerId !== dragId) return;
-    const dx = e.clientX - x0;
-    dragId = null;
-    if (!dragging) return;
-    dragging = false;
-    settle();
-    if (Math.abs(dx) > 40) show(dx < 0 ? i + 1 : i - 1);
-    resume();
-  });
-  row.addEventListener("pointercancel", (e) => {
-    if (e.pointerId !== dragId) return;
-    dragId = null;
-    if (dragging) { dragging = false; settle(); resume(); }
-  });
+  prevBtn?.addEventListener("click", () => go(i - 1));
+  nextBtn?.addEventListener("click", () => go(i + 1));
 
   mount.addEventListener("mouseenter", pause);
   mount.addEventListener("mouseleave", resume);
   mount.addEventListener("focusin", pause);
-  mount.addEventListener("focusout", (e) => {
-    if (!mount.contains(e.relatedTarget)) resume();
+  mount.addEventListener("focusout", (e) => { if (!mount.contains(e.relatedTarget)) resume(); });
+
+  // Re-centre the active card when the viewport changes size (no animation).
+  let rzTimer = null;
+  window.addEventListener("resize", () => {
+    window.clearTimeout(rzTimer);
+    rzTimer = window.setTimeout(() => centre(i, false), 150);
   });
 
-  paint();
-  start();
+  setActive(0);
+  requestAnimationFrame(() => { centre(0, false); start(); });
 }
 
 /* --------------------------------------------------------- Hero quick-selector */
