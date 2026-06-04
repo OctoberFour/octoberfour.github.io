@@ -482,6 +482,14 @@ a:hover .fa-arrow-right,
 .footer__credit { display: inline-flex; align-items: center; }
 .footer__credit img { height: 13px; width: auto; display: block; opacity: 0.55; transition: opacity var(--dur-fast) var(--ease-out); }
 .footer__credit:hover img { opacity: 1; }
+/* Light mode: the white Cybernautic mark would vanish on the light footer — tint it to
+   a neutral grey a step darker than the footer ground (#E9EAEB), darker still on hover. */
+[data-theme="light"] .footer__credit img {
+  filter: brightness(0) invert(0.8);   /* #fff → ~#CCC */
+  opacity: 1;
+  transition: filter var(--dur-fast) var(--ease-out);
+}
+[data-theme="light"] .footer__credit:hover img { filter: brightness(0) invert(0.6); }   /* ~#999 */
 @media (max-width: 900px) { .footer__top { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .footer__top { grid-template-columns: 1fr; } }
 
