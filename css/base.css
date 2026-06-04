@@ -63,7 +63,7 @@ strong, b { font-weight: 700; }
   font-size: var(--fs-xs);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--color-red);
+  color: var(--color-red-ink);
   font-weight: 500;
 }
 .overline--fog { color: var(--color-fog); }

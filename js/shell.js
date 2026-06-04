@@ -18,7 +18,7 @@ const NAV = [
       ["Food & Animal Processing", "/pages/industry.html?i=food-and-animal-processing-facilities"],
       ["Cleaners & Dry Cleaning", "/pages/industry.html?i=cleaners-and-the-dry-cleaning-industry"]
     ] },
-  { label: "Parts", href: "#", external: true, title: "Parts store (Shopify) — coming soon" },
+  { label: "Parts", href: "#", external: true, title: "Parts store (Shopify), coming soon" },
   { label: "Order Now", href: "/pages/order.html", cta: "ghost" },
   { label: "Contact", href: "/pages/contact.html", cta: "primary" }
 ];
@@ -111,7 +111,7 @@ function buildHeader(site, catalog) {
     </div>
     <header class="site-header">
       <nav class="nav" aria-label="Primary">
-        <a class="nav__logo" href="/" aria-label="Yamamoto North America — home">
+        <a class="nav__logo" href="/" aria-label="Yamamoto North America, home">
           <img class="logo-img logo-img--dark" src="/img/logo/yamamoto-logo-white.png" alt="Yamamoto North America" width="160" height="32">
           <img class="logo-img logo-img--light" src="/img/logo/yamamoto-logo-black.png" alt="" width="160" height="32" aria-hidden="true">
         </a>
@@ -197,7 +197,7 @@ function buildFooter(site) {
         <div class="footer__brand">
           <img class="logo-img logo-img--dark" src="/img/logo/yamamoto-logo-white.png" alt="Yamamoto North America" width="180" height="36">
           <img class="logo-img logo-img--light" src="/img/logo/yamamoto-logo-black.png" alt="" width="180" height="36" aria-hidden="true">
-          <p>North America representative for Yamamoto commercial &amp; industrial laundry equipment — sales, distribution &amp; support.</p>
+          <p>North America representative for Yamamoto commercial &amp; industrial laundry equipment. Sales, distribution &amp; support.</p>
           <div class="footer__social">${social}</div>
         </div>
         <div class="footer__col">

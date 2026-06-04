@@ -201,7 +201,7 @@
     font-size: var(--fs-xs);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    color: var(--color-red);
+    color: var(--color-red-ink);
     white-space: nowrap;
   }
   .hero__alert-chev {
@@ -359,7 +359,7 @@
 /* ========================================================== Differentiators */
 .diff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--color-line-dark); border: 1px solid var(--color-line-dark); }
 .diff-card { background: var(--color-ink); padding: var(--space-5); position: relative; }
-.diff-card__num { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--color-red); letter-spacing: var(--tracking-wide); }
+.diff-card__num { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--color-red-ink); letter-spacing: var(--tracking-wide); }
 .diff-card h3 { font-size: var(--fs-md); margin-block: var(--space-2) var(--space-2); }
 .diff-card p { color: var(--color-fog); font-size: var(--fs-sm); }
 @media (max-width: 760px) { .diff-grid { grid-template-columns: 1fr; } }
@@ -391,7 +391,7 @@
 .ind-card__overlay { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, var(--color-ink)); }
 .ind-card__content { position: relative; z-index: 1; }
 .ind-card h3 { font-size: var(--fs-md); }
-.ind-card .arrow { color: var(--color-red); margin-top: var(--space-2); display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--font-mono); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+.ind-card .arrow { color: var(--color-red-ink); margin-top: var(--space-2); display: inline-flex; align-items: center; gap: 0.4rem; font-family: var(--font-mono); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
 .ind-card__link::after { content: ""; position: absolute; inset: 0; }
 @media (max-width: 860px) { .ind-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 520px) { .ind-grid { grid-template-columns: 1fr; } }
@@ -740,7 +740,7 @@
 .resource-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); border-top: 1px solid var(--color-line-dark); border-left: 1px solid var(--color-line-dark); }
 .resource-grid > * { border-right: 1px solid var(--color-line-dark); border-bottom: 1px solid var(--color-line-dark); }
 .resource-card { background: var(--color-ink); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2); }
-.resource-card .doc-type { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--color-red); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
+.resource-card .doc-type { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--color-red-ink); text-transform: uppercase; letter-spacing: var(--tracking-wide); }
 .resource-card h4 { font-family: var(--font-display); text-transform: uppercase; font-size: var(--fs-base); }
 @media (max-width: 760px) { .portal-shell { grid-template-columns: 1fr; } .portal-side { border-right: 0; border-bottom: 1px solid var(--color-line-dark); } }
 

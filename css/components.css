@@ -424,7 +424,7 @@ a:hover .fa-arrow-right,
   text-transform: uppercase; letter-spacing: var(--tracking-caps); font-weight: 700;
   margin-top: var(--space-1);
 }
-.product-card__sub { font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--color-red); }
+.product-card__sub { font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--color-red-ink); }
 .product-card__link::after { content: ""; position: absolute; inset: 0; } /* whole card clickable */
 .product-card__cta {
   margin-top: auto; padding-top: var(--space-3);
@@ -455,7 +455,7 @@ a:hover .fa-arrow-right,
 /* Big count-up stat */
 .stat { font-family: var(--font-mono); }
 .stat__num { font-family: var(--font-display); font-size: var(--fs-2xl); line-height: 1; color: var(--text-on-dark); }
-.stat__unit { color: var(--color-red); font-size: var(--fs-md); }
+.stat__unit { color: var(--color-red-ink); font-size: var(--fs-md); }
 .stat__label { color: var(--color-fog); font-size: var(--fs-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; margin-top: var(--space-2); }
 
 /* ---------------------------------------------------------------- Section heading */
@@ -509,7 +509,7 @@ a:hover .fa-arrow-right,
 /* ---------------------------------------------------------------- Forms */
 .field { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-4); }
 .field label { font-family: var(--font-mono); font-size: var(--fs-sm); letter-spacing: 0.04em; }
-.field .req { color: var(--color-red); }
+.field .req { color: var(--color-red-ink); }
 .field .hint { font-size: var(--fs-xs); color: var(--color-fog); }
 .field input, .field select, .field textarea {
   background: var(--color-ink);
@@ -523,7 +523,7 @@ a:hover .fa-arrow-right,
 .field textarea { min-height: 130px; resize: vertical; }
 .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--color-red); }
 .field input:user-invalid, .field select:user-invalid, .field textarea:user-invalid { border-color: var(--color-red); }
-.field .error { color: var(--color-red); font-size: var(--fs-sm); display: none; }
+.field .error { color: var(--color-red-ink); font-size: var(--fs-sm); display: none; }
 .field.has-error .error { display: block; }
 /* Form dropdowns — custom chevron + dark mono items, matching the nav dropdowns */
 .field select {
@@ -574,7 +574,7 @@ a:hover .fa-arrow-right,
   transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
 }
 .cselect__option:hover, .cselect__option:focus-visible { background: var(--color-surface-2); color: #fff; outline: none; }
-.cselect__option[aria-selected="true"] { color: var(--color-red); }
+.cselect__option[aria-selected="true"] { color: var(--color-red-ink); }
 .cselect__option:disabled { color: var(--color-fog); cursor: default; }
 
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }

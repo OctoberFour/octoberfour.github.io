@@ -41,11 +41,11 @@ function renderGate(root) {
           <button class="btn btn--primary btn--block" type="submit">Sign In ${icon("arrow",16)}</button>
         </form>
         <p style="margin-top:1rem;font-size:var(--fs-sm);color:var(--color-fog)">
-          Need access? Accounts are created by the Yamamoto team —
-          <a href="/pages/contact.html" style="color:#fff;text-decoration:underline">contact us</a>.
+          Need access? Accounts are created by the Yamamoto team.
+          <a href="/pages/contact.html" style="color:#fff;text-decoration:underline">Contact us</a>.
         </p>
         <p class="portal-note">
-          DEMO GATE — not secure. No real authentication runs in this phase;
+          DEMO GATE: not secure. No real authentication runs in this phase;
           any email/password opens the demo portal so the layout can be reviewed.
           Real sign-in is a later backend phase.
         </p>
@@ -76,7 +76,7 @@ async function renderPortal(root, session) {
       <div class="container page-hero__inner">
         <span class="overline">Dealer Portal</span>
         <h1 style="margin:.5rem 0">Hello, ${escapeHtml(session.firstName)}</h1>
-        <p class="lead">Spec sheets, manuals, parts lists and training — all in one place.</p>
+        <p class="lead">Spec sheets, manuals, parts lists and training, all in one place.</p>
       </div>
     </div>
     <div class="portal-shell container" style="padding-block:0;border:1px solid var(--color-line-dark)">

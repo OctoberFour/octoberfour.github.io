@@ -167,8 +167,8 @@ export async function initFeatured() {
         <span class="featured__tag">${escapeHtml(tag)}</span>
       </div>
       <h2 class="featured__title" id="featured-title">Built to<br>run hard.</h2>
-      <p class="featured__sub">The ${escapeHtml(p.model)} — ${escapeHtml(cat?.name || "")}</p>
-      <p class="featured__lede">Our heaviest-duty soft-mount machine — built to run hard, all day, with extraction that pulls more water out and cuts drying time and energy cost.</p>
+      <p class="featured__sub">The ${escapeHtml(p.model)}, ${escapeHtml(cat?.name || "")}</p>
+      <p class="featured__lede">Our heaviest-duty soft-mount machine, built to run hard, all day, with extraction that pulls more water out and cuts drying time and energy cost.</p>
       <div class="featured__stats">${specs}</div>
       <div class="featured__cta">
         <a class="btn btn--primary btn--lg" href="/products/detail.html?p=${p.slug}">View the ${escapeHtml(p.model)} ${icon("arrow", 16)}</a>
@@ -383,7 +383,7 @@ export async function initHeroSelector() {
     capSel.disabled = !cat;
     capSel.innerHTML = cat
       ? `<option value="">Any capacity…</option>` +
-        inCat.map(p => `<option value="${p.slug}">${escapeHtml(p.model)} — ${escapeHtml(p.subtitle || "")}</option>`).join("")
+        inCat.map(p => `<option value="${p.slug}">${escapeHtml(p.model)}, ${escapeHtml(p.subtitle || "")}</option>`).join("")
       : `<option value="">Select type first…</option>`;
   };
   typeSel.addEventListener("change", fillCaps);
@@ -464,7 +464,7 @@ export async function initProductDetail() {
       <div>
         <span class="overline">${escapeHtml(cName)}</span>
         <h1 style="margin:.5rem 0">${escapeHtml(p.model)}</h1>
-        <p class="lead">${escapeHtml(p.subtitle || "")} — built for the lowest total cost of ownership, with full U.S.-based technical support.</p>
+        <p class="lead">${escapeHtml(p.subtitle || "")}, built for the lowest total cost of ownership, with full U.S.-based technical support.</p>
         <div class="pd-actions">
           <a class="btn btn--primary btn--lg" href="/pages/quote.html?model=${p.slug}">Request a Quote ${icon("arrow",16)}</a>
           <a class="btn btn--ghost btn--lg" href="/pages/dealer-locator.html">Find a Distributor</a>
@@ -480,7 +480,7 @@ export async function initProductDetail() {
           <p class="measure" style="color:var(--color-fog-2)">
             The ${escapeHtml(p.model)} is part of the ${escapeHtml(cName)} range. Full descriptions,
             dimensions, utility requirements and downloadable documents are sourced per machine from the
-            manufacturer — drop them into this template's data file.
+            manufacturer. Drop them into this template's data file.
           </p>
         </div>
         <div>
@@ -490,11 +490,11 @@ export async function initProductDetail() {
             <a href="#">${icon("file",18)} <span>Installation &amp; Operation Manual</span> ${icon("download",18)}</a>
             <a href="#">${icon("file",18)} <span>Architect / Engineer Resources (ARCAT)</span> ${icon("arrow",18)}</a>
           </div>
-          <p class="hint" style="margin-top:.5rem;color:var(--color-fog);font-family:var(--font-mono);font-size:var(--fs-xs)">Document links are placeholders — wire to real files.</p>
+          <p class="hint" style="margin-top:.5rem;color:var(--color-fog);font-family:var(--font-mono);font-size:var(--fs-xs)">Document links are placeholders. Wire to real files.</p>
         </div>
       </div>
       <aside class="stack">
-        ${specBlock(p, `${p.model} — Technical Data`)}
+        ${specBlock(p, `${p.model} Technical Data`)}
         <a class="btn btn--primary btn--block" href="/pages/quote.html?model=${p.slug}">Get a Quote on the ${escapeHtml(p.model)}</a>
         <a class="btn btn--ghost btn--block btn--call" href="tel:+18662040519">${icon("phone",16)} 866-204-0519</a>
       </aside>
@@ -529,7 +529,7 @@ export async function initIndustryPage() {
     <div class="textmedia" style="margin-top:2rem">
       <div class="prose">
         <p class="lead">${escapeHtml(ind.body || "")}</p>
-        <p>Yamamoto machines are matched to the demands of ${escapeHtml(ind.name.toLowerCase())} laundry — built for the lowest total cost of ownership, with full U.S.-based technical support. Detailed copy for this page is sourced from the live industry pages.</p>
+        <p>Yamamoto machines are matched to the demands of ${escapeHtml(ind.name.toLowerCase())} laundry, built for the lowest total cost of ownership, with full U.S.-based technical support. Detailed copy for this page is sourced from the live industry pages.</p>
         <div class="pd-actions">
           <a class="btn btn--primary" href="/pages/quote.html">Request a Quote ${icon("arrow",16)}</a>
           <a class="btn btn--ghost" href="/pages/products.html">Browse Machines</a>
@@ -580,7 +580,7 @@ export async function populateFormOptions() {
         const inCat = data.products.filter(p => p.category === c.slug);
         if (!inCat.length) return `<option value="${c.slug}">${escapeHtml(c.name)} (range)</option>`;
         return `<optgroup label="${escapeHtml(c.name)}">` +
-          inCat.map(p => `<option value="${p.slug}">${escapeHtml(p.model)} — ${escapeHtml(p.subtitle || "")}</option>`).join("") +
+          inCat.map(p => `<option value="${p.slug}">${escapeHtml(p.model)}, ${escapeHtml(p.subtitle || "")}</option>`).join("") +
           `</optgroup>`;
       }).join("");
       modelSelects.forEach(sel => {
