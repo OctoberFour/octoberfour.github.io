@@ -255,13 +255,16 @@ export async function initTestimonials() {
 
   const n = items.length;
   const reduce = prefersReducedMotion();
-  let i = 0, timer = null, isPaused = false, dir = 1;
+  const loop = n > 1;                 // a lone quote can't loop
+  let timer = null, isPaused = false;
 
-  // Every quote lives in the scroller at once. Navigation physically scrolls the
-  // chosen card to centre — the cards never re-render or cross-fade in place; they
-  // only fade where they pass under the masked left/right edges of the window.
-  row.innerHTML = items.map((t, idx) => `
-    <article class="tcard${idx === 0 ? " is-active" : ""}" aria-roledescription="testimonial">
+  // Seamless infinite loop: render THREE copies of the set and always keep the
+  // centred card in the middle copy. After a step lands in an outer copy we hop —
+  // instantly, with no animation — to the identical middle-copy card. The copies
+  // are identical so the hop is invisible; every card always has neighbours (no end
+  // gaps) and next/prev wrap forever. Cards still only fade at the masked edges.
+  const tcard = (t, real) => `
+    <article class="tcard" aria-roledescription="testimonial"${real ? "" : ' aria-hidden="true"'}>
       <span class="tcard__mark" aria-hidden="true">&ldquo;</span>
       <p class="tcard__quote">${escapeHtml(t.quote)}</p>
       <p class="tcard__attr">
@@ -269,34 +272,48 @@ export async function initTestimonials() {
         <span class="tcard__sep" aria-hidden="true">//</span>
         <span class="tcard__role">${escapeHtml(t.role)}</span>
       </p>
-    </article>`).join("");
-  const cards = Array.from(row.querySelectorAll(".tcard"));
+    </article>`;
+  const copies = loop ? 3 : 1;
+  let html = "";
+  for (let c = 0; c < copies; c++) html += items.map((t) => tcard(t, c === (loop ? 1 : 0))).join("");
+  row.innerHTML = html;
+  const cards = Array.from(row.querySelectorAll(".tcard"));   // copies × n
+  let pos = loop ? n : 0;             // track index of the centred card (start: real card 0)
 
-  const clamp = (x) => Math.max(0, Math.min(n - 1, x));
-  const setActive = (idx) => {
-    i = idx;
-    cards.forEach((c, k) => c.classList.toggle("is-active", k === idx));
-    prevBtn?.classList.toggle("is-disabled", idx <= 0);
-    nextBtn?.classList.toggle("is-disabled", idx >= n - 1);
-    prevBtn?.setAttribute("aria-disabled", String(idx <= 0));
-    nextBtn?.setAttribute("aria-disabled", String(idx >= n - 1));
+  const setActive = (p) => {
+    pos = p;
+    cards.forEach((c, k) => c.classList.toggle("is-active", k === p));
   };
 
-  // Scroll so card `target` sits in the centre of the window. scroll-snap settles
-  // it; the eased scroll IS the physical movement the user sees.
-  const centre = (target, smooth) => {
-    const card = cards[clamp(target)];
+  // Centre track index `p`. behavior "instant" forces a no-animation hop even though
+  // the row's CSS scroll-behavior is smooth — that is what keeps the loop seamless.
+  const centre = (p, smooth) => {
+    const card = cards[p];
     const offset = card.getBoundingClientRect().left - row.getBoundingClientRect().left;
     const left = row.scrollLeft + offset - (row.clientWidth - card.clientWidth) / 2;
-    row.scrollTo({ left, behavior: smooth && !reduce ? "smooth" : "auto" });
+    row.scrollTo({ left, behavior: smooth && !reduce ? "smooth" : "instant" });
   };
-  const go = (target) => { const t = clamp(target); centre(t, true); setActive(t); };
 
-  // After a native swipe (or any scroll) settles, mark whichever card is nearest
-  // the window centre as the active one.
+  // Hop back into the middle copy if a move parked us in an outer one (invisible).
+  const normalize = () => {
+    if (!loop) return;
+    let p = pos;
+    if (p < n) p += n; else if (p >= 2 * n) p -= n;
+    if (p !== pos) { setActive(p); centre(p, false); }
+  };
+
+  const go = (delta) => {
+    if (!loop) return;
+    normalize();                 // anchor in the middle copy, then step one card out
+    setActive(pos + delta);
+    centre(pos, true);           // the eased scroll the user sees; normalize() runs on settle
+  };
+
+  // After any scroll settles (native swipe included), mark whichever card is nearest
+  // the window centre as active, then hop back into the middle copy.
   const nearest = () => {
     const mid = row.getBoundingClientRect().left + row.clientWidth / 2;
-    let best = 0, bestD = Infinity;
+    let best = pos, bestD = Infinity;
     cards.forEach((c, k) => {
       const r = c.getBoundingClientRect();
       const d = Math.abs(r.left + r.width / 2 - mid);
@@ -307,22 +324,29 @@ export async function initTestimonials() {
   let settleTimer = null;
   row.addEventListener("scroll", () => {
     window.clearTimeout(settleTimer);
-    settleTimer = window.setTimeout(() => { const idx = nearest(); if (idx !== i) setActive(idx); }, 90);
+    settleTimer = window.setTimeout(() => {
+      const p = nearest();
+      setActive(p);
+      // If a free swipe left the card off-centre, ease it to centre (we don't use
+      // CSS scroll-snap — it fights programmatic scrolling). Once centred, the loop
+      // hop is safe to run.
+      const r = cards[p].getBoundingClientRect();
+      const off = (r.left + r.width / 2) - (row.getBoundingClientRect().left + row.clientWidth / 2);
+      if (Math.abs(off) > 4) centre(p, true);
+      else normalize();
+    }, 110);
   }, { passive: true });
 
   const stop = () => { if (timer) { window.clearInterval(timer); timer = null; } };
   const start = () => {
-    if (timer || isPaused || reduce || n < 2) return;
-    timer = window.setInterval(() => {
-      if (i >= n - 1) dir = -1; else if (i <= 0) dir = 1;
-      go(i + dir);
-    }, TESTIMONIAL_INTERVAL_MS);
+    if (timer || isPaused || reduce || !loop) return;
+    timer = window.setInterval(() => go(1), TESTIMONIAL_INTERVAL_MS);
   };
   const pause = () => { isPaused = true; stop(); };
   const resume = () => { isPaused = false; start(); };
 
-  prevBtn?.addEventListener("click", () => go(i - 1));
-  nextBtn?.addEventListener("click", () => go(i + 1));
+  prevBtn?.addEventListener("click", () => go(-1));
+  nextBtn?.addEventListener("click", () => go(1));
 
   mount.addEventListener("mouseenter", pause);
   mount.addEventListener("mouseleave", resume);
@@ -333,11 +357,12 @@ export async function initTestimonials() {
   let rzTimer = null;
   window.addEventListener("resize", () => {
     window.clearTimeout(rzTimer);
-    rzTimer = window.setTimeout(() => centre(i, false), 150);
+    rzTimer = window.setTimeout(() => centre(pos, false), 150);
   });
 
-  setActive(0);
-  requestAnimationFrame(() => { centre(0, false); start(); });
+  setActive(pos);
+  centre(pos, false);                 // position synchronously to avoid a load flash
+  requestAnimationFrame(() => { centre(pos, false); start(); });
 }
 
 /* --------------------------------------------------------- Hero quick-selector */

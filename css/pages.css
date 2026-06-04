@@ -634,9 +634,8 @@
   align-items: stretch;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  padding-inline: calc(50% - var(--tcard-w) / 2);   /* so the first/last card can reach centre */
+  padding-inline: calc(50% - var(--tcard-w) / 2);   /* centres any card; snap is done in JS */
   scrollbar-width: none;                              /* Firefox */
 }
 .testimonial-cards__row {
@@ -654,7 +653,6 @@
 /* The dark testimonial card */
 .tcard {
   flex: 0 0 var(--tcard-w);
-  scroll-snap-align: center;
   min-width: 0;
   display: flex;
   flex-direction: column;
