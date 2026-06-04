@@ -82,6 +82,11 @@ a:hover .fa-arrow-right,
 .alert-bar__close:hover { background: rgba(0,0,0,0.18); }
 
 /* ---------------------------------------------------------------- Header / nav */
+/* The shell injects the header inside this wrapper (js/shell.js). Without this,
+   the sticky header's containing block is the wrapper — only as tall as the header
+   itself — so it unsticks immediately. display:contents drops the wrapper box so
+   the header sticks relative to <body> and stays pinned through the whole scroll. */
+[data-shell="header"] { display: contents; }
 .site-header {
   position: sticky;
   top: 0;
@@ -344,7 +349,7 @@ a:hover .fa-arrow-right,
   display: flex; flex-direction: column;
   padding: var(--space-4) var(--gutter);
   background: transparent;
-  transition: box-shadow .42s var(--ease-out), background-color .35s var(--ease-out);
+  transition: background-color 240ms var(--ease-out);
 }
 .trust-item:hover .trust-item__card {
   background: var(--color-ink);
@@ -358,15 +363,23 @@ a:hover .fa-arrow-right,
   font-size: var(--fs-xs); color: var(--color-fog); font-family: var(--font-mono);
   text-transform: uppercase; letter-spacing: 0.06em; margin-top: var(--space-1);
 }
+/* Reveal via grid-template-rows 0fr→1fr — opens to the text's exact height (no
+   max-height overshoot/"finishes early" jank), and shares one 240ms ease with the
+   card background so the whole hover moves as a single unit. */
 .trust-item__desc {
-  max-height: 0; opacity: 0; overflow: hidden; margin-top: 0;
+  display: grid; grid-template-rows: 0fr; opacity: 0; margin-top: 0;
   color: var(--color-fog-2); font-size: var(--fs-sm); line-height: 1.5; max-width: 36ch;
-  transition: max-height .42s var(--ease-out), opacity .3s var(--ease-out), margin-top .42s var(--ease-out);
+  transition: grid-template-rows 240ms var(--ease-out),
+              opacity 200ms var(--ease-out),
+              margin-top 240ms var(--ease-out);
 }
-/* Each description grows to its own natural height (cards may rise to different
-   heights). The card is bottom-anchored, so only the bottom edge holds steady and
-   the gap beneath the text is always the card padding — even across all four. */
-.trust-item:hover .trust-item__desc { max-height: 9em; opacity: 1; margin-top: var(--space-3); }
+.trust-item__desc > span { overflow: hidden; min-height: 0; }
+/* The card is bottom-anchored, so as the description opens the card grows upward
+   and the title rises — the gap beneath the text stays the card padding. */
+.trust-item:hover .trust-item__desc { grid-template-rows: 1fr; opacity: 1; margin-top: var(--space-3); }
+@media (prefers-reduced-motion: reduce) {
+  .trust-item__card, .trust-item__desc { transition: none; }
+}
 @media (max-width: 900px) { .trust-band__grid { grid-template-columns: repeat(2, 1fr); }
   .trust-item:nth-child(odd) { border-left: 0; }
   .trust-item:nth-child(n+3) { border-top: 1px solid var(--color-line-dark); } }
@@ -456,7 +469,7 @@ a:hover .fa-arrow-right,
   max-width: var(--container); margin-inline: auto; padding: var(--space-7) var(--gutter) var(--space-6);
   display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: var(--space-6);
 }
-.footer__brand img { height: 39px; margin-bottom: var(--space-3); }   /* +15% */
+.footer__brand img { height: 47px; margin-bottom: var(--space-3); }   /* enlarged (+20% over prior) */
 .footer__brand p { color: var(--color-fog); font-size: var(--fs-sm); max-width: 34ch; }
 .footer__col h4 { font-size: var(--fs-sm); color: var(--text-on-dark); margin-bottom: var(--space-3); }
 .footer__col a { display: block; padding: 0.3rem 0; color: var(--color-fog); font-size: var(--fs-sm); }
