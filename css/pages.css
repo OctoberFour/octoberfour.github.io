@@ -6,20 +6,23 @@
 /* ========================================================== SPLIT HERO (home) */
 /* overflow visible so the hero's custom dropdowns can escape the panel/section */
 .hero { position: relative; background: var(--color-ink); overflow: visible; border-bottom: 1px solid var(--color-line-dark); }
-/* Banner video background + legibility scrim (darker on the left, behind the text) */
+/* Banner video background + legibility scrim (darker on the left, behind the text).
+   The source footage is pillarboxed (centered content with baked-in black bars on
+   the left/right ~12.5% each), so we centre the framing and zoom just past the bars
+   (scale / background-size > 1.34) to keep the banner edge-to-edge with no black. */
 .hero__bg {
   position: absolute; inset: 0; z-index: 0;
   overflow: hidden;
-  background: var(--color-ink) url("/img/people/hero-banner-poster.png") 84% 74% / cover no-repeat;
+  background: var(--color-ink) url("/img/people/hero-banner-poster.png") 50% 60% / 142% no-repeat;
 }
 .hero__video {
   width: 100%;
   height: 100%;
   max-width: none;
   object-fit: cover;
-  object-position: 84% 74%;
-  transform: scale(1.38);
-  transform-origin: 84% 74%;
+  object-position: 50% 60%;
+  transform: scale(1.42);
+  transform-origin: 50% 60%;
 }
 .hero__scrim {
   position: absolute; inset: 0; z-index: 0;
@@ -32,10 +35,9 @@
 .hero__grid {
   position: relative; z-index: 1;
   max-width: var(--container); margin-inline: auto;
-  display: grid; grid-template-columns: 3fr 1fr;
+  display: grid; grid-template-columns: 1fr;
   min-height: clamp(560px, 80vh, 760px);
 }
-/* the red divider is the form panel's left border (see .hero__door) */
 
 /* Left: brand cinema */
 .hero__cinema {
@@ -45,53 +47,11 @@
 .hero__eyebrow { display: flex; align-items: center; gap: var(--space-2); }
 .hero__title { font-size: var(--fs-3xl); letter-spacing: 0.02em; }
 .hero__title .em { color: var(--color-red); }
+.hero__cta { display: flex; gap: var(--space-3); flex-wrap: wrap; }
 .hero__trustline { font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--color-fog); display: flex; gap: var(--space-3); flex-wrap: wrap; }
 .hero__trustline .dot { color: var(--color-red); }
 
-/* Right: the fast door (urgency) — frosted glass over the photo */
-.hero__door {
-  position: relative; z-index: 3;
-  background: rgba(13,13,15,0.66);
-  -webkit-backdrop-filter: blur(9px) saturate(125%);
-          backdrop-filter: blur(9px) saturate(125%);
-  padding: var(--space-6) var(--gutter);
-  display: flex; flex-direction: column; justify-content: center; gap: var(--space-3);
-  border-left: 2px solid var(--color-red);   /* the banner's red line = form's left border */
-}
-.hero__door h2 { font-size: var(--fs-xl); }
-.hero__door .down { color: var(--color-red); }
-.hero__door-disclosure {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-.hero__alert {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  list-style: none;
-}
-.hero__alert::-webkit-details-marker { display: none; }
-.hero__alert-title {
-  display: block;
-  font-family: var(--font-display);
-  font-size: var(--fs-xl);
-  font-weight: 700;
-  line-height: var(--lh-tight);
-  letter-spacing: var(--tracking-caps);
-  text-transform: uppercase;
-}
-.hero__alert-text {
-  display: block;
-  color: var(--color-fog);
-  font-size: var(--fs-sm);
-}
-.hero__alert-action { display: none; }
-.hero__door-body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
+/* In-stock badge — used in the products page header */
 .hero__instock {
   display: inline-flex; align-items: center; gap: var(--space-2);
   font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--text-on-dark);
@@ -105,48 +65,21 @@
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(226,35,26,0.55); } 70% { box-shadow: 0 0 0 10px rgba(226,35,26,0); } 100% { box-shadow: 0 0 0 0 rgba(226,35,26,0); } }
 @media (prefers-reduced-motion: reduce) { .hero__instock .pulse { animation: none; } }
 
-.selector { display: grid; gap: var(--space-2); margin-block: var(--space-2); }
-.selector label { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--color-fog); letter-spacing: 0.06em; text-transform: uppercase; }
-.selector select {
-  width: 100%; background-color: var(--color-ink); border: 1px solid var(--color-line-dark);
-  color: var(--text-on-dark); padding: 0.8rem 1rem;   /* equal left + right padding */
-  border-radius: var(--radius-input); font-family: var(--font-body); cursor: pointer;
-  appearance: none; -webkit-appearance: none;
-  /* motif chevron (single red spark) drawn in the right padding, not the text box */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23E2231A' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 1rem center;
-}
-.selector select:focus { outline: none; border-color: var(--color-red); }
-.selector select:disabled { opacity: 0.55; cursor: not-allowed; }
-/* Dropdown items styled to the dark, mono, industrial motif */
-.selector select option { background: var(--color-surface); color: var(--text-on-dark); font-family: var(--font-mono); }
-.selector select option:disabled { color: var(--color-fog); }
-.hero__door .btn--block { margin-top: var(--space-2); }
-/* Request a Quote (secondary CTA): lift its hairline border so it reads on the dark form */
-.hero__door .btn--ghost { border-color: var(--color-fog); }
-.hero__door .btn--ghost:hover { border-color: var(--color-fog-2); }
-.hero__phone { text-align: center; font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--color-fog); margin-top: var(--space-1); }
-.hero__phone a { color: var(--text-on-dark); }
-
-/* Mobile: the banner leads; the urgency form collapses to a compact alert that
-   floats over the bottom of the banner and taps open to reveal the form. */
+/* Mobile: the banner fills the hero. */
 @media (max-width: 880px) {
   .hero__grid { grid-template-columns: 1fr; min-height: 0; }
-  .hero__grid::before { display: none; }
 
-  /* Banner (cinema) leads and fills the hero; content sits up top so the lower
-     part of the video stays clear for the alert to ride over. */
   .hero__cinema {
     order: 0;
     padding-block: var(--space-7);
     min-height: 66vh;
     justify-content: flex-start;
   }
-  .hero__bg { background-position: 84% 58%; }
+  .hero__bg { background-position: 50% 58%; background-size: cover; }
   .hero__video {
-    object-position: 84% 58%;
-    transform: scale(1.4);
-    transform-origin: 84% 58%;
+    object-position: 50% 58%;
+    transform: scale(1.42);
+    transform-origin: 50% 58%;
   }
   .hero__scrim {
     background: linear-gradient(180deg,
@@ -154,95 +87,6 @@
                 rgba(13,13,15,0.68) 50%,
                 rgba(13,13,15,0.9) 100%);
   }
-
-  /* The form panel becomes a compact alert overlapping the banner's lower edge. */
-  .hero__door {
-    order: 1;
-    position: relative;
-    z-index: 4;
-    margin-top: calc(-1 * var(--space-7));   /* pull up so it overlaps the banner */
-    display: block;
-    padding: 0;
-    border-left: 0;
-    background: transparent;
-    -webkit-backdrop-filter: none;
-            backdrop-filter: none;
-  }
-  .hero__door-disclosure { gap: 0; }
-
-  /* Collapsed: one slim tappable bar — no badge, no description. */
-  .hero__alert {
-    cursor: pointer;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-3) var(--gutter);
-    border-top: 1px solid var(--color-line-dark);
-    border-left: 4px solid var(--color-red);
-    background: rgba(13,13,15,0.6);
-    -webkit-backdrop-filter: blur(10px) saturate(120%);
-            backdrop-filter: blur(10px) saturate(120%);
-  }
-  .hero__alert:focus-visible { outline: 2px solid var(--color-red); outline-offset: -2px; }
-  .hero__alert .hero__instock { display: none; }
-  .hero__alert-text { display: none; }
-  .hero__alert-copy { display: block; min-width: 0; }
-  .hero__alert .hero__alert-title {
-    font-size: var(--fs-md);
-    line-height: 1.12;
-    max-width: none;
-  }
-  .hero__alert-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    font-family: var(--font-mono);
-    font-size: var(--fs-xs);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: var(--color-red-ink);
-    white-space: nowrap;
-  }
-  .hero__alert-chev {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 14px;
-    height: 14px;
-    transition: transform var(--dur-mid) var(--ease-out);
-  }
-  .hero__alert-chev svg { width: 100%; height: 100%; display: block; }
-  .hero__alert-action-label--open { display: none; }
-  .hero__door-disclosure[open] .hero__alert-action-label--closed { display: none; }
-  .hero__door-disclosure[open] .hero__alert-action-label--open { display: inline; }
-  .hero__door-disclosure[open] .hero__alert-chev { transform: rotate(180deg); }
-  .hero__door-disclosure[open] .hero__door-body {
-    animation: hero-door-open var(--dur-mid) var(--ease-out) both;
-  }
-
-  /* Open: the form drops below the bar, still riding over the banner. */
-  .hero__door-body {
-    padding: var(--space-4) var(--gutter) var(--space-5);
-    border-left: 4px solid var(--color-red);
-    background: rgba(13,13,15,0.92);
-    -webkit-backdrop-filter: blur(12px) saturate(120%);
-            backdrop-filter: blur(12px) saturate(120%);
-  }
-}
-@keyframes hero-door-open {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero__door-disclosure[open] .hero__door-body { animation: none; }
-  .hero__alert-chev { transition: none; }
 }
 
 /* ========================================================== Section frames
@@ -281,11 +125,17 @@
 .lineup__full { width: 100%; }
 .lineup__full .card-grid {
   border-left: 0; border-right: 0;
-  grid-template-columns: repeat(6, 1fr);
+  /* minmax(0,1fr) keeps every column the same width even when a category name has a
+     long token (e.g. "WASHER/EXTRACTORS") — equal widths keep the 9/16 media boxes
+     the same height, so captions stay on a shared baseline. */
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 @media (max-width: 1100px) {
-  .lineup__full .card-grid { grid-template-columns: repeat(3, 1fr); }
+  .lineup__full .card-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+/* Long category names wrap inside the equal-width columns; the smaller size lets
+   names like "WASHER/EXTRACTORS" wrap at the slash rather than breaking mid-word. */
+.lineup .product-card__model { font-size: var(--fs-md); overflow-wrap: anywhere; }
 /* Lineup cutouts: ~15% smaller AND bottom-aligned so the captions land on the same
    line across every card. A tall (9:16) media box matches the washers' portrait
    proportions, and taking the image out of flow keeps every box the same height
@@ -329,6 +179,12 @@
   color: var(--color-fog);
 }
 .lineup .product-card__feat > span:last-child { color: var(--text-on-dark); white-space: nowrap; }
+/* Category cards reveal their broad blurb (prose) in the same hover panel. */
+.lineup .product-card__blurb {
+  margin: 0;
+  font-family: var(--font-mono); font-size: var(--fs-xs); line-height: 1.55;
+  color: var(--text-on-dark);
+}
 
 /* Desktop only: a lineup card lifts and enlarges while its specs slide up. Real
    pointers only, so touch never triggers it; keyboard focus gets parity. */
@@ -566,6 +422,37 @@
 }
 .featured__img { position: relative; max-width: 100%; max-height: 580px; width: auto; height: auto; object-fit: contain; }
 
+/* Card stack: each featured machine is a card; the front is interactive, the rest
+   peek behind it (transforms set per-card in js/catalog.js). */
+.featstack { position: relative; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+.featstack__deck { position: relative; }
+.featcard {
+  position: absolute; top: 0; left: 0; right: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line-dark);
+  padding: clamp(1.75rem, 4vw, 3.25rem);
+  transform-origin: center bottom;   /* scale shrinks from the bottom so cards peek below */
+  transition: transform 0.55s var(--ease-out), opacity 0.45s var(--ease-out);
+  will-change: transform, opacity;
+}
+.featcard .featured__inner { max-width: none; margin: 0; padding-inline: 0; }
+/* Prev/next controls — same arrows as the testimonial slider (.testimonial-cards__arrow). */
+.featstack__nav { display: flex; align-items: center; justify-content: center; gap: var(--space-3); margin-top: var(--space-5); }
+.featstack__arrow {
+  width: 46px; height: 46px; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border: 1px solid var(--color-line-dark);
+  color: var(--color-fog); font-family: var(--font-mono); font-size: 1.15rem;
+  cursor: pointer; touch-action: manipulation;
+  transition: border-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .featstack__arrow:hover { border-color: var(--color-red); color: var(--text-on-dark); }
+}
+.featstack__arrow--next { border-color: var(--color-red); color: var(--text-on-dark); }
+@media (prefers-reduced-motion: reduce) { .featcard { transition: none; } }
+
 @media (max-width: 900px) {
   .featured__inner { grid-template-columns: 1fr; gap: var(--space-5); }
   .featured__media { order: -1; min-height: 0; }
@@ -578,7 +465,7 @@
   background: var(--color-ink);
   color: var(--text-on-dark);
   padding-block: clamp(2.5rem, 5vw, 4.5rem);
-  --tcard-w: clamp(300px, 30vw, 440px);   /* card width — ~3 sit in the window on desktop */
+  --tcard-w: clamp(264px, 24vw, 360px);   /* narrower card — ~3 sit in the window on desktop */
 }
 .testimonial-cards__head {
   text-align: center;
@@ -650,15 +537,23 @@
   padding: var(--space-5) 0;
 }
 
-/* The dark testimonial card */
+/* The dark testimonial card — taller than wide so video cards read as a poster */
 .tcard {
+  position: relative;
   flex: 0 0 var(--tcard-w);
   min-width: 0;
+  min-height: clamp(440px, 56vh, 560px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line-dark);
+}
+.tcard__content {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  background: var(--color-surface);
-  border: 1px solid var(--color-line-dark);
+  flex: 1 1 auto;
   padding: var(--space-5) var(--space-5) var(--space-4);
 }
 .tcard.is-active {
@@ -693,8 +588,73 @@
 .tcard__sep { color: #6e6e72; }
 .tcard__role { color: var(--color-fog); }
 
+/* Industry tag — every card always shows quote + provider + industry */
+.tcard__industry {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-red);
+  border: 1px solid var(--color-line-dark);
+  padding: 0.34rem 0.6rem;
+}
+
+/* Video testimonial: the poster fills the card, the text overlays a bottom gradient,
+   and the play button swaps in an inline player (video / iframe — see catalog.js). */
+.tcard--video { justify-content: flex-end; }
+.tcard__media {
+  position: absolute; inset: 0; z-index: 0;
+  background: var(--color-ink) center / cover no-repeat;
+}
+.tcard__player {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; border: 0; background: #000;
+}
+.tcard--video .tcard__content {
+  position: relative; z-index: 2;
+  flex: 0 0 auto;                 /* hug the bottom rather than fill the card */
+  margin-top: auto;
+  padding-top: var(--space-7);
+  background: linear-gradient(to top,
+    rgba(13, 13, 15, 0.94) 0%, rgba(13, 13, 15, 0.82) 32%,
+    rgba(13, 13, 15, 0.36) 68%, rgba(13, 13, 15, 0) 100%);
+  transition: opacity var(--dur-mid) var(--ease-out);
+}
+/* The overlay sits on a dark video in either theme, so its text is always white
+   (not the theme-dependent --text-on-dark, which goes near-black in light mode). */
+.tcard--video .tcard__quote,
+.tcard--video .tcard__name,
+.tcard--video .tcard__role,
+.tcard--video .tcard__sep,
+.tcard--video .tcard__industry { color: #fff; }
+/* When the video card is the centred (active) one, the default
+   .tcard.is-active .tcard__quote rule would repaint the quote with the theme
+   text colour (near-black in light mode) — keep it white over the video. */
+.tcard--video.is-active .tcard__quote { color: #fff; }
+.tcard--video .tcard__industry { border-color: rgba(255, 255, 255, 0.28); }
+/* Play button — same red disc + white play glyph as the manufacturing video lower
+   on the page (.tech__play), placed in the card's top-right corner. */
+.tcard__play {
+  position: absolute; top: var(--space-4); right: var(--space-4); z-index: 3;
+  width: 56px; height: 56px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--color-red); color: #fff;
+  border: 0; cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out),
+              opacity var(--dur-mid) var(--ease-out);
+}
+.tcard__play i { font-size: 20px; }
+@media (hover: hover) and (pointer: fine) {
+  .tcard__play:hover { background: var(--color-red-deep); }
+}
+/* While the inline player is open, the poster text + play button get out of the way. */
+.tcard.is-playing .tcard__play,
+.tcard.is-playing .tcard__content { opacity: 0; pointer-events: none; }
+
 @media (max-width: 900px) {
-  .testimonial--cards { --tcard-w: min(82vw, 440px); }   /* one card centred, neighbours peek */
+  .testimonial--cards { --tcard-w: min(78vw, 340px); }   /* one card centred, neighbours peek */
 }
 @media (prefers-reduced-motion: reduce) {
   .testimonial-cards__row { scroll-behavior: auto; }

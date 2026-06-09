@@ -1,7 +1,7 @@
 /* select.js — replaces the native <select> popup (which the OS renders unstyled,
    especially on Safari/macOS) with a custom dark dropdown that matches the site.
    The real <select> stays in the form as the source of truth; we mirror its value
-   and dispatch a native "change" so existing handlers (hero routing, validation,
+   and dispatch a native "change" so existing handlers (validation,
    capacity repopulation) keep working. Progressive enhancement: no JS = native select. */
 
 const CHEVRON =
@@ -9,7 +9,7 @@ const CHEVRON =
   'stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
 
 export function initSelects() {
-  document.querySelectorAll(".selector select, .field select").forEach(enhance);
+  document.querySelectorAll(".field select").forEach(enhance);
 }
 
 function enhance(select) {

@@ -4,27 +4,31 @@
     "author": "Operations Manager",
     "role": "Hotel laundry",
     "industry": "hospitality",
-    "image": ""
+    "video": "/video/sample-banner-video.mp4",
+    "poster": "/img/people/hero-banner-poster.png"
   },
   {
     "quote": "We needed equipment that could run consistently without adding more complexity for our staff.",
     "author": "Facilities Director",
     "role": "Regional hospital",
     "industry": "healthcare",
-    "image": ""
+    "video": "",
+    "poster": ""
   },
   {
     "quote": "The build quality feels different. It is the kind of machine we expect to keep working hard for years.",
     "author": "Plant Supervisor",
     "role": "Industrial laundry",
     "industry": "industrial",
-    "image": ""
+    "video": "",
+    "poster": ""
   },
   {
     "quote": "When a machine is down, speed matters. Yamamoto helped us get the right replacement without slowing production.",
     "author": "General Manager",
     "role": "Commercial laundry",
     "industry": "service",
-    "image": ""
+    "video": "",
+    "poster": ""
   }
 ]

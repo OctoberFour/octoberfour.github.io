@@ -22,25 +22,33 @@ const FALLBACK_TESTIMONIALS = [
     quote: "The controls were easy for our team to learn, and the machine keeps up with our busiest laundry days.",
     author: "Operations Manager",
     role: "Hotel laundry",
-    industry: "hospitality"
+    industry: "hospitality",
+    video: "",
+    poster: ""
   },
   {
     quote: "We needed equipment that could run consistently without adding more complexity for our staff.",
     author: "Facilities Director",
     role: "Regional hospital",
-    industry: "healthcare"
+    industry: "healthcare",
+    video: "",
+    poster: ""
   },
   {
     quote: "The build quality feels different. It is the kind of machine we expect to keep working hard for years.",
     author: "Plant Supervisor",
     role: "Industrial laundry",
-    industry: "industrial"
+    industry: "industrial",
+    video: "",
+    poster: ""
   },
   {
     quote: "When a machine is down, speed matters. Yamamoto helped us get the right replacement without slowing production.",
     author: "General Manager",
     role: "Commercial laundry",
-    industry: "service"
+    industry: "service",
+    video: "",
+    poster: ""
   }
 ];
 
@@ -69,6 +77,29 @@ function productCard(data, p, opts = {}) {
     <span class="product-card__sub">${escapeHtml(p.subtitle || "")}</span>
     <a class="product-card__cta product-card__link" href="/products/detail.html?p=${p.slug}">
       View machine ${icon("arrow", 16)}
+    </a>
+  </article>`;
+}
+
+/* A broad category card for the homepage lineup — category name + image, with the
+   blurb revealed on hover (no specific model or specs). Mirrors .product-card so it
+   drops into the same lineup grid and hover treatment. */
+function categoryCard(data, c) {
+  const count = (data.products || []).filter(p => p.category === c.slug).length;
+  const kicker = count ? `${count} machine${count > 1 ? "s" : ""}` : "Cleaning system";
+  const img = c.nav_image
+    ? `<img class="pcut" src="${escapeHtml(c.nav_image)}" alt="${escapeHtml(c.name)}" loading="lazy" decoding="async">`
+    : "";
+  const blurb = c.blurb
+    ? `<div class="product-card__features"><p class="product-card__blurb">${escapeHtml(c.blurb)}</p></div>`
+    : "";
+  return `
+  <article class="product-card">
+    <div class="product-card__media">${img}${blurb}</div>
+    <span class="product-card__cat">${escapeHtml(kicker)}</span>
+    <h3 class="product-card__model">${escapeHtml(c.name)}</h3>
+    <a class="product-card__cta product-card__link" href="/pages/products.html?cat=${encodeURIComponent(c.slug)}">
+      Explore ${icon("arrow", 16)}
     </a>
   </article>`;
 }
@@ -116,33 +147,37 @@ export async function initLineup() {
   if (!mount) return;
   const data = await catalog();
   if (!data) return;
-  // One representative machine per category-ish + the flagships
-  const picks = ["wun-30", "wun-100", "wun-275", "vug-750", "wud-80", "fut10bt"];
-  const list = picks.map(s => data.products.find(p => p.slug === s)).filter(Boolean);
-  mount.innerHTML = list.map(p => productCard(data, p, { features: true })).join("");
+  // Broad category features (not specific machines): one card per product category.
+  const cats = data.categories || [];
+  mount.innerHTML = cats.map(c => categoryCard(data, c)).join("");
 }
 
-/* --------------------------------------------------- Homepage: featured machine */
-export async function initFeatured() {
-  const mount = document.querySelector("[data-featured]");
-  if (!mount) return;
-  const data = await catalog();
-  if (!data) return;
-  const p = data.products.find(x => x.slug === mount.dataset.featured);
-  if (!p) return;
-  const cat = (data.categories || []).find(c => c.slug === p.category);
+/* --------------------------------------------------- Homepage: featured machines (card stack)
+   data-featured is a comma list of slugs; each becomes a spotlight card, stacked.
+   The front card is interactive; clicking a peeking card (or a dot, or swiping)
+   brings the next one forward. Copy is auto-built from each machine's name + specs. */
+const FEAT_LABELS = {
+  load_capacity_lbs: ["Load Capacity", "lb"],
+  wash_dry_lbs: ["Wash / Dry", "lb"],
+  g_force: ["Extract Force", "G"],
+  drying_heat: ["Heating", ""],
+  machine_weight_lbs: ["Machine Weight", "lb"]
+};
+const FEAT_STAT_ORDER = ["load_capacity_lbs", "wash_dry_lbs", "g_force", "drying_heat", "machine_weight_lbs"];
 
-  // Full spec labels for this hero (capacity → extract force → weight).
-  const FEAT_LABELS = {
-    load_capacity_lbs: ["Load Capacity", "lb"],
-    wash_dry_lbs: ["Wash / Dry", "lb"],
-    g_force: ["Extract Force", "G"],
-    drying_heat: ["Heating", ""],
-    machine_weight_lbs: ["Machine Weight", "lb"]
-  };
-  const STAT_ORDER = ["load_capacity_lbs", "wash_dry_lbs", "g_force", "drying_heat", "machine_weight_lbs"];
-  const rank = (k) => (STAT_ORDER.indexOf(k) + 1) || 99;
-  const specs = Object.entries(p.specs || {})
+/* Generic, no-per-machine-writing blurb keyed off the category. */
+function featuredLede(categorySlug) {
+  const s = String(categorySlug || "");
+  if (/dryer/.test(s)) return "Fast, even drying with efficient heat, designed to keep linen moving and energy costs down.";
+  if (/combination|wash.*dry/.test(s)) return "Wash and dry in a single footprint, ideal where floor space is tight and uptime matters.";
+  if (/folder|finishing/.test(s)) return "Finishing throughput that keeps pace with your busiest days, with simple, reliable operation.";
+  if (/harmony/.test(s)) return "A gentler, solvent-free path to clean: modern wet-cleaning built for consistent, repeatable results.";
+  return "High-G extraction pulls more water out, cutting drying time and energy cost, built to run hard, all day.";
+}
+
+function featuredStats(p) {
+  const rank = (k) => (FEAT_STAT_ORDER.indexOf(k) + 1) || 99;
+  return Object.entries(p.specs || {})
     .filter(([, v]) => v != null)
     .sort((a, b) => rank(a[0]) - rank(b[0]))
     .slice(0, 3)
@@ -155,29 +190,114 @@ export async function initFeatured() {
         <span class="featured__stat-label">${escapeHtml(label)}</span>
       </div>`;
     }).join('<span class="featured__stat-div" aria-hidden="true"></span>');
+}
 
-  // Short eyebrow tag from the category (e.g. "Industrial Washer/Extractors" → "Industrial").
-  const tag = (cat?.name || "Featured").split(/[\s/]+/)[0];
+export async function initFeatured() {
+  const mount = document.querySelector("[data-featured]");
+  if (!mount) return;
+  const data = await catalog();
+  if (!data) return;
+  const slugs = (mount.dataset.featured || "").split(",").map(s => s.trim()).filter(Boolean);
+  const products = slugs.map(s => data.products.find(x => x.slug === s)).filter(Boolean);
+  if (!products.length) return;
+  const n = products.length;
 
-  mount.innerHTML = `
-    <div class="featured__copy" data-stagger>
-      <div class="featured__eyebrow">
-        <span class="overline">Featured machine</span>
-        <span class="featured__rule" aria-hidden="true"></span>
-        <span class="featured__tag">${escapeHtml(tag)}</span>
+  const card = (p, i) => {
+    const cat = (data.categories || []).find(c => c.slug === p.category);
+    const tag = (cat?.name || "Featured").split(/[\s/]+/)[0];
+    const front = i === 0;
+    const off = front ? "" : ' tabindex="-1"';
+    return `
+    <article class="featcard" role="group" aria-roledescription="slide" aria-label="${escapeHtml(p.model)} — ${i + 1} of ${n}"${front ? "" : ' aria-hidden="true"'}>
+      <div class="featured__inner">
+        <div class="featured__copy">
+          <div class="featured__eyebrow">
+            <span class="overline">Featured machine</span>
+            <span class="featured__rule" aria-hidden="true"></span>
+            <span class="featured__tag">${escapeHtml(tag)}</span>
+          </div>
+          <h2 class="featured__title"${front ? ' id="featured-title"' : ""}>${escapeHtml(p.model)}</h2>
+          <p class="featured__sub">${escapeHtml(cat?.name || "")}</p>
+          <p class="featured__lede">${featuredLede(p.category)}</p>
+          <div class="featured__stats">${featuredStats(p)}</div>
+          <div class="featured__cta">
+            <a class="btn btn--primary btn--lg" href="/products/detail.html?p=${encodeURIComponent(p.slug)}"${off}>View the ${escapeHtml(p.model)} ${icon("arrow", 16)}</a>
+            <a class="btn btn--ghost btn--lg" href="/pages/quote.html"${off}>Request a quote</a>
+          </div>
+        </div>
+        <div class="featured__media">
+          <img class="featured__img" src="${escapeHtml(p.cutout || "")}" alt="${escapeHtml(p.model)}" loading="lazy" decoding="async">
+        </div>
       </div>
-      <h2 class="featured__title" id="featured-title">Built to<br>run hard.</h2>
-      <p class="featured__sub">The ${escapeHtml(p.model)}, ${escapeHtml(cat?.name || "")}</p>
-      <p class="featured__lede">Our heaviest-duty soft-mount machine, built to run hard, all day, with extraction that pulls more water out and cuts drying time and energy cost.</p>
-      <div class="featured__stats">${specs}</div>
-      <div class="featured__cta">
-        <a class="btn btn--primary btn--lg" href="/products/detail.html?p=${p.slug}">View the ${escapeHtml(p.model)} ${icon("arrow", 16)}</a>
-        <a class="btn btn--ghost btn--lg" href="/pages/quote.html">Request a quote</a>
-      </div>
-    </div>
-    <div class="featured__media" data-reveal>
-      <img class="featured__img" src="${escapeHtml(p.cutout || "")}" alt="${escapeHtml(p.model)}" loading="lazy" decoding="async">
-    </div>`;
+    </article>`;
+  };
+
+  const nav = `
+    <button class="featstack__arrow" type="button" data-prev aria-label="Previous machine"><span aria-hidden="true">&lsaquo;</span></button>
+    <button class="featstack__arrow featstack__arrow--next" type="button" data-next aria-label="Next machine"><span aria-hidden="true">&rsaquo;</span></button>`;
+
+  mount.innerHTML =
+    `<div class="featstack__deck">${products.map(card).join("")}</div>` +
+    `<div class="featstack__nav" role="group" aria-label="Featured machine controls">${nav}</div>`;
+
+  const deck = mount.querySelector(".featstack__deck");
+  const cards = [...deck.querySelectorAll(".featcard")];
+  const VIS = Math.min(3, n);     // front card + up to two peeking behind it
+  let active = 0;
+
+  const layout = () => {
+    cards.forEach((c, i) => {
+      const d = (i - active + n) % n;
+      const dd = Math.min(d, VIS - 1);
+      const shown = d < VIS;
+      c.style.transform = `translateY(${dd * 18}px) scale(${(1 - dd * 0.05).toFixed(3)})`;
+      c.style.opacity = shown ? String(1 - dd * 0.28) : "0";
+      c.style.zIndex = String(n - d);
+      c.style.pointerEvents = shown ? "auto" : "none";
+      const front = d === 0;
+      c.setAttribute("aria-hidden", front ? "false" : "true");
+      c.querySelectorAll("a").forEach(a => { a.tabIndex = front ? 0 : -1; });
+    });
+  };
+  const setActive = (i) => { active = ((i % n) + n) % n; layout(); };
+
+  // Equalise card heights, then give the deck room for the peeking cards below.
+  const sizeDeck = () => {
+    let max = 0;
+    cards.forEach(c => { c.style.minHeight = ""; max = Math.max(max, c.offsetHeight); });
+    cards.forEach(c => { c.style.minHeight = max + "px"; });
+    deck.style.minHeight = (max + (VIS - 1) * 18 + 8) + "px";
+  };
+
+  // Click a peeking card to bring it forward; the front card's own links act normally.
+  mount.addEventListener("click", (e) => {
+    const arrow = e.target.closest(".featstack__arrow");
+    if (arrow) { setActive(active + (arrow.hasAttribute("data-next") ? 1 : -1)); return; }
+    const c = e.target.closest(".featcard");
+    if (!c) return;
+    const i = cards.indexOf(c);
+    if (i === active) return;        // front card: let its buttons/links work
+    e.preventDefault();              // behind card: just bring it forward
+    setActive(i);
+  });
+
+  // Touch swipe: left → next, right → previous.
+  let sx = null;
+  deck.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; }, { passive: true });
+  deck.addEventListener("touchend", (e) => {
+    if (sx == null) return;
+    const dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) > 40) setActive(active + (dx < 0 ? 1 : -1));
+    sx = null;
+  }, { passive: true });
+
+  let rz = null;
+  window.addEventListener("resize", () => { window.clearTimeout(rz); rz = window.setTimeout(sizeDeck, 150); });
+
+  layout();
+  sizeDeck();
+  // Images load lazily; re-measure once each arrives so heights stay correct.
+  cards.forEach(c => { const img = c.querySelector("img"); if (img && !img.complete) img.addEventListener("load", sizeDeck, { once: true }); });
 }
 
 /* --------------------------------------------------------- Homepage: industries */
@@ -241,7 +361,27 @@ export async function initIndustriesConsole() {
   });
 }
 
-/* --------------------------------------------------------- Homepage: testimonials (light cards) */
+/* Title-case an industry slug for display: "hospitality" -> "Hospitality". */
+function industryLabel(s) {
+  return String(s || "").split(/[-_\s]+/).filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+}
+
+/* Classify a testimonial's optional video so we know how to play it inline:
+   a self-hosted file (.mp4/.webm path) plays in a <video>; a YouTube or Vimeo
+   link (full URL, short link, or bare 11-char YouTube id) plays in an <iframe>. */
+function videoSource(src) {
+  if (!src) return null;
+  const s = String(src).trim();
+  const yt = s.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/) ||
+             (/^[\w-]{11}$/.test(s) ? [null, s] : null);
+  if (yt) return { kind: "embed", url: `https://www.youtube.com/embed/${yt[1]}?autoplay=1&rel=0&playsinline=1` };
+  const vm = s.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (vm) return { kind: "embed", url: `https://player.vimeo.com/video/${vm[1]}?autoplay=1` };
+  return { kind: "file", url: s };
+}
+
+/* --------------------------------------------------------- Homepage: testimonials (video / quote cards) */
 export async function initTestimonials() {
   const mount = document.querySelector("[data-testimonials]");
   if (!mount) return;
@@ -256,23 +396,43 @@ export async function initTestimonials() {
   const n = items.length;
   const reduce = prefersReducedMotion();
   const loop = n > 1;                 // a lone quote can't loop
-  let timer = null, isPaused = false;
+  let timer = null, isPaused = false, videoEngaged = false;
 
   // Seamless infinite loop: render THREE copies of the set and always keep the
   // centred card in the middle copy. After a step lands in an outer copy we hop —
   // instantly, with no animation — to the identical middle-copy card. The copies
   // are identical so the hop is invisible; every card always has neighbours (no end
   // gaps) and next/prev wrap forever. Cards still only fade at the masked edges.
-  const tcard = (t, real) => `
-    <article class="tcard" aria-roledescription="testimonial"${real ? "" : ' aria-hidden="true"'}>
-      <span class="tcard__mark" aria-hidden="true">&ldquo;</span>
-      <p class="tcard__quote">${escapeHtml(t.quote)}</p>
-      <p class="tcard__attr">
-        <span class="tcard__name">${escapeHtml(t.author)}</span>
-        <span class="tcard__sep" aria-hidden="true">//</span>
-        <span class="tcard__role">${escapeHtml(t.role)}</span>
-      </p>
-    </article>`;
+  // A testimonial always shows quote + provider + industry. If it also has a video,
+  // the card becomes a poster with a play button and the text overlays a gradient;
+  // clicking play swaps the poster for an inline player (see the playback block below).
+  const tcard = (t, real) => {
+    const vs = videoSource(t.video);
+    const ind = industryLabel(t.industry);
+    const content = `
+      <div class="tcard__content">
+        ${ind ? `<span class="tcard__industry">${escapeHtml(ind)}</span>` : ""}
+        ${vs ? "" : `<span class="tcard__mark" aria-hidden="true">&ldquo;</span>`}
+        <p class="tcard__quote">${escapeHtml(t.quote)}</p>
+        <p class="tcard__attr">
+          <span class="tcard__name">${escapeHtml(t.author)}</span>
+          <span class="tcard__sep" aria-hidden="true">//</span>
+          <span class="tcard__role">${escapeHtml(t.role)}</span>
+        </p>
+      </div>`;
+    if (!vs) {
+      return `<article class="tcard" aria-roledescription="testimonial"${real ? "" : ' aria-hidden="true"'}>${content}</article>`;
+    }
+    const posterStyle = t.poster ? ` style="background-image:url('${encodeURI(t.poster)}')"` : "";
+    return `
+      <article class="tcard tcard--video" aria-roledescription="testimonial" data-tvideo="${escapeHtml(t.video)}"${t.poster ? ` data-tposter="${escapeHtml(t.poster)}"` : ""}${real ? "" : ' aria-hidden="true"'}>
+        <div class="tcard__media"${posterStyle}></div>
+        <button class="tcard__play" type="button" aria-label="Play video testimonial from ${escapeHtml(t.author)}"${real ? "" : ' tabindex="-1"'}>
+          <i class="fa-thin fa-play" aria-hidden="true"></i>
+        </button>
+        ${content}
+      </article>`;
+  };
   const copies = loop ? 3 : 1;
   let html = "";
   for (let c = 0; c < copies; c++) html += items.map((t) => tcard(t, c === (loop ? 1 : 0))).join("");
@@ -304,6 +464,7 @@ export async function initTestimonials() {
 
   const go = (delta) => {
     if (!loop) return;
+    resetVideos();               // a moving carousel never drags a playing video along
     normalize();                 // anchor in the middle copy, then step one card out
     setActive(pos + delta);
     centre(pos, true);           // the eased scroll the user sees; normalize() runs on settle
@@ -339,7 +500,7 @@ export async function initTestimonials() {
 
   const stop = () => { if (timer) { window.clearInterval(timer); timer = null; } };
   const start = () => {
-    if (timer || isPaused || reduce || !loop) return;
+    if (timer || isPaused || reduce || !loop || videoEngaged) return;
     timer = window.setInterval(() => go(1), TESTIMONIAL_INTERVAL_MS);
   };
   const pause = () => { isPaused = true; stop(); };
@@ -353,6 +514,54 @@ export async function initTestimonials() {
   mount.addEventListener("focusin", pause);
   mount.addEventListener("focusout", (e) => { if (!mount.contains(e.relatedTarget)) resume(); });
 
+  // ---- Inline video playback ------------------------------------------------
+  // A video card shows its poster + play button; clicking swaps in a real <video>
+  // (self-hosted) or <iframe> (YouTube/Vimeo) that plays inline with sound. Only
+  // one plays at a time; playing holds the auto-advance, and navigating away (or
+  // the clip ending) restores the poster so audio never runs off-screen.
+  const resetVideos = () => {
+    row.querySelectorAll(".tcard.is-playing").forEach((card) => {
+      card.classList.remove("is-playing");
+      const player = card.querySelector(".tcard__media video, .tcard__media iframe");
+      if (player) player.remove();
+    });
+    videoEngaged = false;
+  };
+  const playVideo = (card) => {
+    const vs = videoSource(card.getAttribute("data-tvideo"));
+    if (!vs) return;
+    resetVideos();
+    const media = card.querySelector(".tcard__media");
+    const poster = card.getAttribute("data-tposter");
+    let player;
+    if (vs.kind === "file") {
+      player = document.createElement("video");
+      player.src = vs.url;
+      player.controls = true;
+      player.autoplay = true;
+      player.playsInline = true;
+      if (poster) player.poster = poster;
+      player.addEventListener("ended", resetVideos);
+    } else {
+      player = document.createElement("iframe");
+      player.src = vs.url;
+      player.title = "Video testimonial";
+      player.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media";
+      player.allowFullscreen = true;
+    }
+    player.className = "tcard__player";
+    media.appendChild(player);
+    card.classList.add("is-playing");
+    videoEngaged = true;
+    pause();
+  };
+  row.addEventListener("click", (e) => {
+    const btn = e.target.closest(".tcard__play");
+    if (!btn) return;
+    const card = btn.closest(".tcard");
+    if (card) playVideo(card);
+  });
+
   // Re-centre the active card when the viewport changes size (no animation).
   let rzTimer = null;
   window.addEventListener("resize", () => {
@@ -363,39 +572,6 @@ export async function initTestimonials() {
   setActive(pos);
   centre(pos, false);                 // position synchronously to avoid a load flash
   requestAnimationFrame(() => { centre(pos, false); start(); });
-}
-
-/* --------------------------------------------------------- Hero quick-selector */
-export async function initHeroSelector() {
-  const form = document.querySelector("[data-hero-selector]");
-  if (!form) return;
-  const data = await catalog();
-  if (!data) return;
-  const typeSel = form.querySelector("[name=type]");
-  const capSel = form.querySelector("[name=capacity]");
-
-  typeSel.innerHTML = `<option value="">Select type…</option>` +
-    data.categories.map(c => `<option value="${c.slug}">${escapeHtml(c.name)}</option>`).join("");
-
-  const fillCaps = () => {
-    const cat = typeSel.value;
-    const inCat = data.products.filter(p => p.category === cat);
-    capSel.disabled = !cat;
-    capSel.innerHTML = cat
-      ? `<option value="">Any capacity…</option>` +
-        inCat.map(p => `<option value="${p.slug}">${escapeHtml(p.model)}, ${escapeHtml(p.subtitle || "")}</option>`).join("")
-      : `<option value="">Select type first…</option>`;
-  };
-  typeSel.addEventListener("change", fillCaps);
-  fillCaps();
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const slug = capSel.value, cat = typeSel.value;
-    if (slug) location.href = `/products/detail.html?p=${slug}`;
-    else if (cat) location.href = `/pages/products.html?cat=${cat}`;
-    else location.href = `/pages/products.html`;
-  });
 }
 
 /* --------------------------------------------------------- Category / products page */
