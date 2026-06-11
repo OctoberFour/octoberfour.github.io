@@ -1,8 +1,0 @@
-[
-  { "slug": "hospitality-industry", "name": "Hospitality", "tagline": "Hotels, resorts & linen services", "body": "High-volume linen and towel processing with the throughput and reliability busy properties demand.", "image": "/img/industries/hospitality.webp" },
-  { "slug": "athletic-facilities", "name": "Athletic Facilities", "tagline": "Gyms, teams & training centers", "body": "Fast turnaround on towels and athletic wear, with extraction that cuts drying time and energy cost.", "image": "/img/industries/athletic.webp" },
-  { "slug": "healthcare-facilities", "name": "Healthcare", "tagline": "Hospitals, clinics & care homes", "body": "Hygienic, repeatable wash programs for healthcare linens where consistency is non-negotiable.", "image": "/img/industries/healthcare.webp" },
-  { "slug": "industrial-facilities", "name": "Industrial", "tagline": "Plants, shops & uniform programs", "body": "Heavy-soil industrial laundry and uniform programs handled by machines built to run hard.", "image": "/img/industries/industrial.webp" },
-  { "slug": "food-and-animal-processing-facilities", "name": "Food & Animal Processing", "tagline": "Processing & sanitation laundry", "body": "Sanitation-grade laundry for food and animal processing environments with demanding wash standards.", "image": "/img/industries/food.webp" },
-  { "slug": "cleaners-and-the-dry-cleaning-industry", "name": "Cleaners & Dry Cleaning", "tagline": "Wet-clean & dry-clean operations", "body": "Modern wet-cleaning with the Harmony system as a gentle, solvent-free path for cleaners.", "image": "/img/industries/cleaners.webp" }
-]
